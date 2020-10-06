@@ -1,0 +1,10 @@
+<meta charset="UTF-8">
+<script>
+  var target = location.search.substr(1)
+  if (target.indexOf('http') === 0) {
+    location.replace(location.href.split('/go/?')[1])
+  } else {
+    location.href='/?search=' + target
+  }
+</script>
+<title>跳转中…</title><small><center>跳转中…</center></small>
