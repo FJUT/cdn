@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Hi, Kainy</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://blogs.kainy.cn/"/>
+  <updated>2021-07-31T12:42:55.040Z</updated>
+  <id>https://blogs.kainy.cn/</id>
+  
+  <author>
+    <name>Kainy Guo</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>小程序开发者工具“插件模式”下本地调试云函数的方法</title>
+    <link href="https://blogs.kainy.cn/2021/05/20210511%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7%E6%8F%92%E4%BB%B6%E6%A8%A1%E5%BC%8F%E4%B8%8B%E8%B0%83%E8%AF%95%E4%BA%91%E5%87%BD%E6%95%B0%E7%9A%84%E6%96%B9%E6%B3%95/"/>
+    <id>https://blogs.kainy.cn/2021/05/20210511小程序开发者工具插件模式下调试云函数的方法/</id>
+    <published>2021-05-11T11:50:35.000Z</published>
+    <updated>2021-07-31T12:42:55.040Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p><strong>票圈海报</strong> 插件开发过程中，用到小程序云开发。</p><p>在云函数开发过程中，如果是普通小程序，开启本地调试后，模拟器中的小程序请求会自动转发到本地云函数，无需每次改动后部署云端，可监听文件改动自动重载，可进行断点调试等操作，十分方便。</p><p>但是在“插件模式”下，插件中的云函数调用，似乎并没有被转发到本地，而是请求到云端。也就是说本地调试只针对小程序有效。</p><p>可如果切回“小程序模式”，插件代码又无法实时改动，调试更加繁琐。</p><a id="more"></a><h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><p>所以问题突破点在于：如何在开发模式为“小程序模式”下，引用开发版本的小程序插件代码。</p><p>搜寻一番，发现微信开发者工具 1.02.1911181 RC开始支持引用小程序开发版插件</p><p>具体方法是：</p><p>在“插件模式”下，上传插件代码，然后将弹窗中的“开发版插件引用ID”复制下来</p><p><img src="https://tva1.sinaimg.cn/large/4d6e3e3bgy1gqeazsgxg1j20rq0amt9s.jpg"></p><p>切换到“小程序模式”，修改 <code>miniprogram/app.json</code> 文件内容，将 <code>[&quot;plugins&quot;][&quot;myPlugin&quot;][&quot;version&quot;]</code> 字段值改为 “ dev -［ 刚才复制的开发版插件引用ID ］” 格式。</p><p><img src="https://tva1.sinaimg.cn/large/4d6e3e3bgy1gqebnvtfnxj20ni06o74s.jpg"></p><h1 id="吐个槽"><a href="#吐个槽" class="headerlink" title="吐个槽"></a>吐个槽</h1><p>插件调用用户信息功能页，需要在 miniprogram/app.json 文件中增加声明</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"functionalPages"</span>: &#123;</span><br><span class="line">    <span class="attr">"independent"</span>: <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>使得插件和小程序耦合起来，对于小程序已经托管到第三方，无法自己改代码。很不便，这种其实作为一个配置项，在小程序公众平台配置会比较合理。</p><div><hr><strong>为您推荐</strong><ul><li><a href="https://blogs.kainy.cn/2020/12/网页开发者工具(Chrome DevTools)中开启暗黑模式（dark mode）调试的方法/">网页开发者工具（Chrome DevTools）中开启暗黑模式（dark mode）调试的方法</a></li><li><a href="https://blogs.kainy.cn/2012/09/'IE浏览器URL最大长度2,083？'/">IE浏览器URL最大长度2,083？</a></li><li><a href="https://blogs.kainy.cn/2020/12/小程序插件用户信息功能页/">小程序插件用户信息功能页调试问题的解决</a></li><li><a href="https://blogs.kainy.cn/2016/01/平安内网标装机远程调试安卓webview的方法/">平安内网标装机远程调试安卓webview的方法</a></li><li><a href="https://blogs.kainy.cn/2015/04/微信webview远程调试/">微信webview远程调试</a></li><li><a href="https://blogs.kainy.cn/2016/03/Android_WebView_前端开发调试/">Android WebView 前端开发调试</a></li></ul></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述&quot;&gt;&lt;/a&gt;问题描述&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;票圈海报&lt;/strong&gt; 插件开发过程中，用到小程序云开发。&lt;/p&gt;
+&lt;p&gt;在云函数开发过程中，如果是普通小程序，开启本地调试后，模拟器中的小程序请求会自动转发到本地云函数，无需每次改动后部署云端，可监听文件改动自动重载，可进行断点调试等操作，十分方便。&lt;/p&gt;
+&lt;p&gt;但是在“插件模式”下，插件中的云函数调用，似乎并没有被转发到本地，而是请求到云端。也就是说本地调试只针对小程序有效。&lt;/p&gt;
+&lt;p&gt;可如果切回“小程序模式”，插件代码又无法实时改动，调试更加繁琐。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="建站❤编程" scheme="https://blogs.kainy.cn/categories/%E5%BB%BA%E7%AB%99%E2%9D%A4%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="JavaScript" scheme="https://blogs.kainy.cn/categories/%E5%BB%BA%E7%AB%99%E2%9D%A4%E7%BC%96%E7%A8%8B/JavaScript/"/>
+    
+    
+      <category term="调试" scheme="https://blogs.kainy.cn/tags/%E8%B0%83%E8%AF%95/"/>
+    
+      <category term="小程序插件" scheme="https://blogs.kainy.cn/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8F%92%E4%BB%B6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>小程序数据助手统计数据不准确的可能原因</title>
+    <link href="https://blogs.kainy.cn/2021/04/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%95%B0%E6%8D%AE%E5%8A%A9%E6%89%8B%E7%BB%9F%E8%AE%A1%E6%95%B0%E6%8D%AE%E4%B8%8D%E5%87%86%E7%A1%AE%E7%9A%84%E5%8F%AF%E8%83%BD%E5%8E%9F%E5%9B%A0/"/>
+    <id>https://blogs.kainy.cn/2021/04/小程序数据助手统计数据不准确的可能原因/</id>
+    <published>2021-04-23T10:50:35.000Z</published>
+    <updated>2021-07-31T12:42:55.059Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在<a href="/2020/11/201116小程序插件数据统计/?f=小程序数据助手统计数据不准确的可能原因">小程序插件数据统计</a>中，介绍了一种追踪小程序插件访问数据的方法。该方法同样适用于小程序数据统计。</p><p>虽然微信官方提供了<code>公众平台</code>和<code>小程序数据助手</code>等非常方便的工具，但实际业务中，会发现一些和预期不一致的统计结果，比如业务数据和访问数据步调不一致。这时就需要有份参照数据交叉验证。经过对几个小程序的官方和自有统计数据，一段时间的观察和比较，总体来说，官方的数据会低于自己统计。</p><a id="more"></a><h2 id="统计口径"><a href="#统计口径" class="headerlink" title="统计口径"></a>统计口径</h2><p>为了增加可对比性，参照数据的统计口径应尽量和官方保持一致，所以在小程序端上送了 openid 作为访客标识。</p><p>参考官方的访问数据统计口径：</p><ul><li>累计访问人数：历史累计访问小程序的用户数，同一用户多次访问不重复计。</li><li>新访问人数：首次访问小程序页面的用户数，同一用户多次访问不重复计。</li><li>打开次数：打开小程序的总次数。用户从打开小程序到主动关闭或超时退出小程序的过程，计为一次。</li><li>访问次数：访问小程序页面的总次数。多个页面之间跳转、同一页面的重复访问计为多次访问。</li><li>访问人数：访问小程序页面的总用户数，同一用户多次访问不重复计。</li><li>人均停留时长：平均每个用户停留在小程序页面的总时长（单位为秒），即总停留时长/访问人数。</li><li>次均停留时长：平均每次打开小程序停留在小程序页面的总时长（单位为秒），即总停留时长/打开次数。</li><li>平均访问深度：平均每次打开小程序访问的去重页面数。</li><li>访问留存人数：本周期有访问，且上一周期有访问的用户（如日粒度下则为当日访问且昨日有访问的用户）</li><li>访问回流人数：本周期有访问，上一周期没有访问，但历史有访问过的用户（如日粒度下则为当日访问且昨日没有访问，但历史曾经访问过的用户）</li></ul><h2 id="突出案例"><a href="#突出案例" class="headerlink" title="突出案例"></a>突出案例</h2><p><img src="https://tva1.sinaimg.cn/large/4d6e3e3bgy1gpygjzm97oj21b80eymyq.jpg"></p><p>上图是4月26号“AppID查”小程序的访问统计数据，访问人数只有5，但根据自有统计数据，当天上送数据含 openid 除重后是33</p><p><img src="https://tva1.sinaimg.cn/large/4d6e3e3bgy1gpzaix9azij20tm0pytay.jpg" alt="image.png"></p><h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><p>首先在小程序开发者社区查了一些关于“统计数据不准确”的讨论，已经不少人遇到类似的问题。</p><ul><li><a href="https://developers.weixin.qq.com/community/develop/doc/000028440c4ac8214eca6bae851800?* highline=%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%95%B0%E6%8D%AE%E5%8A%A9%E6%89%8B%20%E8%AE%BF%E9%97%AE%E4%BA%BA%E6%95%B0%20" rel="external nofollow noopener noreferrer" target="_blank">小程序数据助手的人数统计似乎不太准确?</a></li><li><a href="https://developers.weixin.qq.com/community/develop/doc/0004ecea5fccb8909edb225e456800?* highLine=%25E6%2595%25B0%25E6%258D%25AE%25E7%25BB%259F%25E8%25AE%25A1%25E5%25B7%25AE%25E5%25BC%2582%25E5%25A4%25A7" rel="external nofollow noopener noreferrer" target="_blank">小程序后台统计数据和数据库实际用户差异很大，是否为假用户？</a></li><li><a href="https://developers.weixin.qq.com/community/develop/doc/0000c87e1fc7806cd39bfe6835b400?* highLine=%25E5%25B0%258F%25E7%25A8%258B%25E5%25BA%258F%25E6%2595%25B0%25E6%258D%25AE%25E5%258A%25A9%25E6%2589%258B%2520%25E8%25AE%25BF%25E9%25* 97%25AE%25E4%25BA%25BA%25E6%2595%25B0" rel="external nofollow noopener noreferrer" target="_blank">很棘手的问题！为什么小程序统计数据不对？求官方大大解决</a></li><li><a href="https://developers.weixin.qq.com/community/develop/doc/000cce4597473834c54954c8651400" rel="external nofollow noopener noreferrer" target="_blank">公众号菜单点击数据和小程序统计的数据差距太大问题？</a></li><li><a href="https://developers.weixin.qq.com/community/develop/doc/000aa40b7d4e68da8adbf4bde56400?jumpto=" rel="external nofollow noopener noreferrer" target="_blank">云开发怎么防刷赞</a></li><li><a href="https://developers.weixin.qq.com/community/develop/doc/00048a3ab7c7e00eb9da3e68a56400?highLine=%25E5%25B0%258F%25E7%25A8%258B%25E5%25BA%258F%25E6%2595%25B0%25E6%258D%25AE%25E5%258A%25A9%25E6%2589%258B%2520%25E8%25AE%25BF%25E9%2597%25AE%25E4%25BA%25BA%25E6%2595%25B0" rel="external nofollow noopener noreferrer" target="_blank">用openid记录用户数，小程序数据助手统计的为什么比自己后台统计的要多很多呢？</a></li></ul><p>这里有官方统计比实际偏高的，也有偏低的。</p><p>偏高好理解，因为微信可以在小程序整个生命周期进行数据上报，而开发者只能在已开放的几个特定生命周期里上报。小程序启动加载、包体加载、启动流程，这些过程都是开发者不可感知的 —— 有可能用户还没加载小程序包就点了关闭按钮，就会导致微信统计到了这次访问，而开发者没统计到。比较好奇偏低的原因，小程序数据统计究竟“漏了”哪部分数据？</p><p>根据社区上面的回答来看，最有可能是官方的数据统计过滤了爬虫数据（1129场景值的微信爬虫，和其他爬虫的访问数据）导致了数据偏低。</p><p>但回到“AppID查”这个小程序，实现的功能实在太简单了 —— 就一个页面，根据输入的 AppID，打开对应小程序，来实现的信息查询，应该不至于招致那么多爬虫来。。 同时，服务端记录了每次查询的 AppID 数据，用于实现底部的“热门查询”模块，根据绝大部分用户查询的 AppID ，和操作时间间隔来看，也不太像是机器操作。所以这个问题就很奇怪。</p><p>个人认为如果真是微信对某些访问进行了过滤，可以考虑开放个接口供开发者验证。比如输入 AppID 和 openid ，返回“真人概率”，以免黑盒导致的困惑。</p><div><hr><strong>为您推荐</strong><ul><li><a href="https://blogs.kainy.cn/2019/02/以webview为中心的小程序开发思考/">以webview为中心的小程序开发模式思考</a></li><li><a href="https://blogs.kainy.cn/2018/07/博客／资讯类网页在小程序中分享的方案/">小程序分享网页方案</a></li><li><a href="https://blogs.kainy.cn/2020/11/201116小程序插件数据统计/">小程序插件数据统计</a></li><li><a href="https://blogs.kainy.cn/2009/11/“柠檬市场”理论的分析和应用实例/">“柠檬市场”理论的分析和应用实例</a></li><li><a href="https://blogs.kainy.cn/2017/09/小程序页面“乱入”问题的解决办法/">小程序页面“被缓存”问题的解决方法</a></li><li><a href="https://blogs.kainy.cn/2018/03/180328总在深夜放大招，小程序官方团队真的没有X生活？/">总在深夜放大招，小程序官方团队真的没有性生活？</a></li></ul></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;在&lt;a href=&quot;/2020/11/201116小程序插件数据统计/?f=小程序数据助手统计数据不准确的可能原因&quot;&gt;小程序插件数据统计&lt;/a&gt;中，介绍了一种追踪小程序插件访问数据的方法。该方法同样适用于小程序数据统计。&lt;/p&gt;
+&lt;p&gt;虽然微信官方提供了&lt;code&gt;公众平台&lt;/code&gt;和&lt;code&gt;小程序数据助手&lt;/code&gt;等非常方便的工具，但实际业务中，会发现一些和预期不一致的统计结果，比如业务数据和访问数据步调不一致。这时就需要有份参照数据交叉验证。经过对几个小程序的官方和自有统计数据，一段时间的观察和比较，总体来说，官方的数据会低于自己统计。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://blogs.kainy.cn/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="小程序" scheme="https://blogs.kainy.cn/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/"/>
+    
+      <category term="数据统计" scheme="https://blogs.kainy.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1/"/>
+    
+      <category term="分析" scheme="https://blogs.kainy.cn/tags/%E5%88%86%E6%9E%90/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>中文域名</title>
+    <link href="https://blogs.kainy.cn/2021/01/%E4%B8%AD%E6%96%87%E5%9F%9F%E5%90%8D/"/>
+    <id>https://blogs.kainy.cn/2021/01/中文域名/</id>
+    <published>2021-01-05T22:20:16.000Z</published>
+    <updated>2021-07-31T12:42:55.050Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h2><p>为<a href="/2020/12/取名记/?f=blogs-ZWYM">宝宝取名</a>后，就琢磨着是不是该注册个域名，结果一搜拼音 guoning ，发现主流的 com、cn、net 毫无意外的已被注册，其中 cn 域名在售卖中，询了下价格，已经到 8k＋ 感觉有点高，而类似 .fun 的后缀，思来想去觉着不太方便记忆，尤其考虑到将来新的后缀不断出现，很容易就搞错了。偶然输入 <a href="https://www.柠.cn/?f=blogs" rel="external nofollow noopener noreferrer" target="_blank">柠.cn</a> 查了下居然还未注册，于是目光转向了中文域名。</p><a id="more"></a><h2 id="国际化域名"><a href="#国际化域名" class="headerlink" title="国际化域名"></a>国际化域名</h2><p>通常我们看到的域名都是由拉丁字符（ASCII码，全称：美国信息交换标准码）组成，比如 baidu.com google.cn ，域名系统（DNS）也只支持ASCII字符的主机名解析。</p><p>为了让数以亿计，母语非拉丁字母组成的新用户，能用本地语言文字访问互联网，互联网工程任务组（IETF）发布了国际化域名应用（IDNA）标准。</p><p>简单理解，就是把各种非拉丁字符（各国语言），转为 ASCII 编码字符串的一个规则，这种编码称为 Punycode 。这样 DNS 依然只需要支持 ASCII 编码，通过引入 Punycode 转码这一层，既实现向下兼容，又不影响现有的应用程序协议，但也导致了下面要说到到限制。</p><h2 id="顾虑"><a href="#顾虑" class="headerlink" title="顾虑"></a>顾虑</h2><p>中文域名，属于国际化域名的一种，虽然已经存在不下十年，但现实中看到使用的却不多。想了下应该主要还是由于兼容问题 —— 通过上面的分析可知，当我们访问了一个中文域名网址，比如 <a href="https://郭涛。中国/?f=blogs" rel="external nofollow noopener noreferrer" target="_blank">郭涛。中国</a> ，实际先经过浏览器对主机名做 Ponycode 转码，对于更底的 DNS 系统实际看到的是客户端（浏览器）解析后的 <code>xn--b2w966e.xn--fiqs8s</code> 。</p><p>这意味着，如果网站访客的客户端不支持解析，则无法解析中文主机名，从而无法访问网址。这时候就得引导访客自己手动在地址栏输入 <code>xn--b2w966e.xn--fiqs8s</code>，这显然非常不便。而且很多情况下访客压根不知道问题出在客户端，以为是网站出了问题，直接就离开了。</p><p>日常使用中，域名出现较多的两个场景是网址和邮箱地址，目前浏览器支持还好，基本上输入中文网址都能访问，只是有些浏览器在地址栏，反显的是 Punycode 而不是中文域名；邮箱客户端方面，Gmail、Outlook、Mac 和 iOS 的邮件客户端，已经可以很好的支持中文域名邮箱，输入和反显都没问题，反而国内用的较多的 QQ 邮箱则尚不支持。</p><p>对于一个依赖客户端支持的应用规范，迟迟得不到广泛应用也就不足为奇了 —— 应用开发者没有动力去支持一个没有什么用户量的（中文域名）特性； 缺少应用开发者支持，又更加没用户愿意使用。</p><h2 id="转机"><a href="#转机" class="headerlink" title="转机"></a>转机</h2><p>事情似乎进入了鸡蛋相生的无解状态，然而看似没有希望本身就蕴含机会。由于大家对中文域名认知不高，有大量长度为1的中文域名没被注册，这种情况在其他通用顶级域名中是很罕见的。</p><p>通过对 Punycode 编码规则的解读，可以看出，中文域名编码后看似很长，其中很大部分原因在于固定前缀 <code>xn--</code> ，虽然这个前缀的来源我尚未考证。但必须承认，去掉这个前缀后，剩余的部分不算太长，特别对于单汉字的域名。</p><p>而且个别汉字的 Punycode，还特别好记忆，比如 <code>泞</code> 编码后是 <code>xn--www</code>，这就完全没有记忆的难度了。对于<code>泞</code>字有特殊意义的人而言，即便遇到客户端不支持中文域名，手动输入 xn–www，也不见得比抓破头想出个沾边的域名，如 ning8、wwwNing、myNing 方便记忆些，况且随着主流客户端对国际化域名支持的加强，这种手输编码的情况还将逐渐减少。</p><h2 id="中文域名推荐表"><a href="#中文域名推荐表" class="headerlink" title="中文域名推荐表"></a>中文域名推荐表</h2><p>根据以上规则整理了一个表格，列出了转 Punycode 后仍有一定意义／方便记忆的中文域名。由于是中文域名，最合适的后缀应该非 cn 莫属，感兴趣可以参考一下，点击第二列的链接可进入域名信息查询页</p><table><thead><tr><th>域名</th><th>Punycode</th><th>是否已注册</th></tr></thead><tbody><tr><td>㚯.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=㚯.cn&f=blogs" target="_blank" rel="noopener">xn–lll.cn</a></td><td>未知</td></tr><tr><td>佐.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=佐.cn&f=blogs" target="_blank" rel="noopener">xn–qqq.cn</a></td><td>否</td></tr><tr><td>吽.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=吽.cn&f=blogs" target="_blank" rel="noopener">xn–rrr.cn</a></td><td>否</td></tr><tr><td>太.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=太.cn&f=blogs" target="_blank" rel="noopener">xn–sss.cn</a></td><td>是</td></tr><tr><td>帗.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=帗.cn&f=blogs" target="_blank" rel="noopener">xn–ttt.cn</a></td><td>否</td></tr><tr><td>挄.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=挄.cn&f=blogs" target="_blank" rel="noopener">xn–uuu.cn</a></td><td>否</td></tr><tr><td>柱.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=柱.cn&f=blogs" target="_blank" rel="noopener">xn–vvv.cn</a></td><td>是</td></tr><tr><td>泞.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=泞.cn&f=blogs" target="_blank" rel="noopener">xn–www.cn</a></td><td>是</td></tr><tr><td>泞.cc</td><td><a href="https://kainy.cn/main/integrated/?domain=泞.cc&f=blogs" target="_blank" rel="noopener">xn–www.cc</a></td><td>是</td></tr><tr><td>燋.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=燋.cn&f=blogs" target="_blank" rel="noopener">xn–xxx.cn</a></td><td>否</td></tr><tr><td>箥.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=箥.cn&f=blogs" target="_blank" rel="noopener">xn–zzz.cn</a></td><td>否</td></tr><tr><td>简.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=简.cn&f=blogs" target="_blank" rel="noopener">xn–xyz.cn</a></td><td>是</td></tr><tr><td>㝥.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=㝥.cn&f=blogs" target="_blank" rel="noopener">xn–sql.cn</a></td><td>否</td></tr><tr><td>䐜.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=䐜.cn&f=blogs" target="_blank" rel="noopener">xn–seo.cn</a></td><td>未知</td></tr><tr><td>呡.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=呡.cn&f=blogs" target="_blank" rel="noopener">xn–ssr.cn</a></td><td>否</td></tr><tr><td>珮.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=珮.cn&f=blogs" target="_blank" rel="noopener">xn–key.cn</a></td><td>否</td></tr><tr><td>奟.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=奟.cn&f=blogs" target="_blank" rel="noopener">xn–bus.cn</a></td><td>否</td></tr><tr><td>剬.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=剬.cn&f=blogs" target="_blank" rel="noopener">xn–her.cn</a></td><td>否</td></tr><tr><td>害.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=害.cn&f=blogs" target="_blank" rel="noopener">xn–cct.cn</a></td><td>否</td></tr><tr><td>畃.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=畃.cn&f=blogs" target="_blank" rel="noopener">xn–boy.cn</a></td><td>否</td></tr><tr><td>灺.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=灺.cn&f=blogs" target="_blank" rel="noopener">xn–box.cn</a></td><td>否</td></tr><tr><td>帨.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=帨.cn&f=blogs" target="_blank" rel="noopener">xn–but.cn</a></td><td>否</td></tr><tr><td>瘕.cn</td><td><a href="https://kainy.cn/main/integrated/?domain=瘕.cn&f=blogs" target="_blank" rel="noopener">xn–buy.cn</a></td><td>否</td></tr></tbody></table><p>有一些太复杂的生僻字，就直接忽略了，有需要可自行查询。以上就是关于中文域名的全部推荐，希望你也喜欢。</p><div><hr><strong>为您推荐</strong><ul><li><a href="https://blogs.kainy.cn/2010/05/注册_.CN_域名的地方/">注册 .CN 域名的地方</a></li><li><a href="https://blogs.kainy.cn/2011/01/短域网/">短域网</a></li><li><a href="https://blogs.kainy.cn/2010/09/2010暑假总结/">2010暑假总结</a></li><li><a href="https://blogs.kainy.cn/2010/07/Hotmail设置邮件转发的方法/">Hotmail设置邮件转发的方法</a></li><li><a href="https://blogs.kainy.cn/2010/01/20100109-cn-com-unregistered-domain/">20100109五位未注册.com域名{cn***.com}</a></li><li><a href="https://blogs.kainy.cn/2010/03/最新Godaddy域名价格查看方法/">最新Godaddy域名价格查看方法</a></li></ul></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;起源&quot;&gt;&lt;a href=&quot;#起源&quot; class=&quot;headerlink&quot; title=&quot;起源&quot;&gt;&lt;/a&gt;起源&lt;/h2&gt;&lt;p&gt;为&lt;a href=&quot;/2020/12/取名记/?f=blogs-ZWYM&quot;&gt;宝宝取名&lt;/a&gt;后，就琢磨着是不是该注册个域名，结果一搜拼音 guoning ，发现主流的 com、cn、net 毫无意外的已被注册，其中 cn 域名在售卖中，询了下价格，已经到 8k＋ 感觉有点高，而类似 .fun 的后缀，思来想去觉着不太方便记忆，尤其考虑到将来新的后缀不断出现，很容易就搞错了。偶然输入 &lt;a href=&quot;https://www.柠.cn/?f=blogs&quot; rel=&quot;external nofollow noopener noreferrer&quot; target=&quot;_blank&quot;&gt;柠.cn&lt;/a&gt; 查了下居然还未注册，于是目光转向了中文域名。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://blogs.kainy.cn/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+      <category term="建站❤编程" scheme="https://blogs.kainy.cn/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E5%BB%BA%E7%AB%99%E2%9D%A4%E7%BC%96%E7%A8%8B/"/>
+    
+    
+      <category term="域名" scheme="https://blogs.kainy.cn/tags/%E5%9F%9F%E5%90%8D/"/>
+    
+      <category term="建站" scheme="https://blogs.kainy.cn/tags/%E5%BB%BA%E7%AB%99/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>网页开发者工具（Chrome DevTools）中开启暗黑模式（dark mode）调试的方法</title>
+    <link href="https://blogs.kainy.cn/2020/12/%E7%BD%91%E9%A1%B5%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7(Chrome%20DevTools)%E4%B8%AD%E5%BC%80%E5%90%AF%E6%9A%97%E9%BB%91%E6%A8%A1%E5%BC%8F%EF%BC%88dark%20mode%EF%BC%89%E8%B0%83%E8%AF%95%E7%9A%84%E6%96%B9%E6%B3%95/"/>
+    <id>https://blogs.kainy.cn/2020/12/网页开发者工具(Chrome DevTools)中开启暗黑模式（dark mode）调试的方法/</id>
+    <published>2020-12-31T10:47:00.000Z</published>
+    <updated>2021-07-31T12:42:55.074Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="开启模拟模式"><a href="#开启模拟模式" class="headerlink" title="开启模拟模式"></a>开启模拟模式</h2><p>Chrome87 版本已经支持，在开发者工具中开启网页的暗黑模式调试。步骤如图示：</p><a id="more"></a><p><img src="https://wx2.sinaimg.cn/large/4d6e3e3bgy1gm7admzf99j217419ogtf.jpg" alt="Chrome DevTools Emulate CSS media type：prefer-color-scheme:dark"></p><p>Rendering Tab 滚到最下面，Emulate CSS media type。</p><h2 id="系统暗黑模式检测代码"><a href="#系统暗黑模式检测代码" class="headerlink" title="系统暗黑模式检测代码"></a>系统暗黑模式检测代码</h2><h3 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@media</span> (<span class="attribute">prefers-color-scheme:</span> dark)&#123;</span><br><span class="line">  <span class="comment">/* 暗黑模式代码 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="JS"><a href="#JS" class="headerlink" title="JS"></a>JS</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> isDarkMode = <span class="built_in">window</span>.matchMedia(<span class="string">'(prefers-color-scheme: dark)'</span>).matches</span><br></pre></td></tr></table></figure><div><hr><strong>为您推荐</strong><ul><li><a href="https://blogs.kainy.cn/2012/09/'IE浏览器URL最大长度2,083？'/">IE浏览器URL最大长度2,083？</a></li><li><a href="https://blogs.kainy.cn/2020/12/小程序插件用户信息功能页/">小程序插件用户信息功能页调试问题的解决</a></li><li><a href="https://blogs.kainy.cn/2021/05/20210511小程序开发者工具插件模式下调试云函数的方法/">小程序开发者工具“插件模式”下本地调试云函数的方法</a></li><li><a href="https://blogs.kainy.cn/2016/01/平安内网标装机远程调试安卓webview的方法/">平安内网标装机远程调试安卓webview的方法</a></li><li><a href="https://blogs.kainy.cn/2015/04/微信webview远程调试/">微信webview远程调试</a></li><li><a href="https://blogs.kainy.cn/2016/03/Android_WebView_前端开发调试/">Android WebView 前端开发调试</a></li></ul></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;开启模拟模式&quot;&gt;&lt;a href=&quot;#开启模拟模式&quot; class=&quot;headerlink&quot; title=&quot;开启模拟模式&quot;&gt;&lt;/a&gt;开启模拟模式&lt;/h2&gt;&lt;p&gt;Chrome87 版本已经支持，在开发者工具中开启网页的暗黑模式调试。步骤如图示：&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://blogs.kainy.cn/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+      <category term="建站❤编程" scheme="https://blogs.kainy.cn/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E5%BB%BA%E7%AB%99%E2%9D%A4%E7%BC%96%E7%A8%8B/"/>
+    
+    
+      <category term="调试" scheme="https://blogs.kainy.cn/tags/%E8%B0%83%E8%AF%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>取名记</title>
+    <link href="https://blogs.kainy.cn/2020/12/%E5%8F%96%E5%90%8D%E8%AE%B0/"/>
+    <id>https://blogs.kainy.cn/2020/12/取名记/</id>
+    <published>2020-12-13T10:47:00.000Z</published>
+    <updated>2021-07-31T12:42:55.056Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h2><p>姓名作为一个人的符号，<strong>可能</strong>伴随一生。一个好名字不仅给别人留下深刻的印象，也关系到一生的事业和人际关系。</p><p>故而郭某虽半生克己，却在宝宝取名上放任贪念，生怕错过一个可能性。即便自己想到的名字都挑不过来，还是在朋友圈、甚至同事匿名社区里求更多的名字建议，拿来投票做参考，最终结果如下：</p><a id="more"></a><h2 id="得票情况"><a href="#得票情况" class="headerlink" title="得票情况"></a>得票情况</h2><p>截止发文：</p><table><thead><tr><th>选项</th><th>百分比%</th></tr></thead><tbody><tr><td>郭柠</td><td>14.3%</td></tr><tr><td>郭楚芸</td><td>10.2%</td></tr><tr><td>郭梓莘</td><td>10.2%</td></tr><tr><td>我觉得这个也不错____</td><td>10.2%</td></tr><tr><td>郭槿</td><td>8.2%</td></tr><tr><td>郭沐</td><td>6.1%</td></tr><tr><td>郭小桃</td><td>6.1%</td></tr><tr><td>郭檬</td><td>6.1%</td></tr><tr><td>郭柔江</td><td>4.1%</td></tr><tr><td>郭槿清</td><td>4.1%</td></tr><tr><td>郭林林</td><td>2.0%</td></tr><tr><td>郭森森</td><td>2.0%</td></tr><tr><td>郭沐梓</td><td>2.0%</td></tr><tr><td>郭诺璟</td><td>2.0%</td></tr><tr><td>郭蔓逸</td><td>2.0%</td></tr><tr><td>郭馥瑄</td><td>2.0%</td></tr><tr><td>郭蕊慷</td><td>2.0%</td></tr><tr><td>郭尚珉</td><td>2.0%</td></tr><tr><td>郭霏璇</td><td>2.0%</td></tr><tr><td>郭蔺朔</td><td>2.0%</td></tr><tr><td>郭新森</td><td>0.0%</td></tr><tr><td>郭杨梅</td><td>0.0%</td></tr><tr><td>郭棋</td><td>0.0%</td></tr><tr><td>郭沐灶</td><td>0.0%</td></tr><tr><td>郭桐晰</td><td>0.0%</td></tr><tr><td>郭玖媤</td><td>0.0%</td></tr><tr><td>郭宛蕊</td><td>0.0%</td></tr><tr><td>郭嘉荨</td><td>0.0%</td></tr><tr><td>郭珏杉</td><td>0.0%</td></tr><tr><td>郭娇逸</td><td>0.0%</td></tr><tr><td>郭美妉</td><td>0.0%</td></tr><tr><td>郭荨铭</td><td>0.0%</td></tr></tbody></table><h2 id="票源地"><a href="#票源地" class="headerlink" title="票源地"></a>票源地</h2><p><img src="https://wx2.sinaimg.cn/large/4d6e3e3bgy1glmnh7ofl7j20tk0ycacp.jpg" alt="image"></p><h2 id="投票设备品牌"><a href="#投票设备品牌" class="headerlink" title="投票设备品牌"></a>投票设备品牌</h2><p><img src="https://wx2.sinaimg.cn/large/4d6e3e3bgy1glmn97zco9j20ts0ju75e.jpg" alt="image"></p><h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>当然，最终不会简单的票数相加来决定取名结果（老父亲牢握决定权），还要综合考虑，比如得票最高的郭柠，虽然给人清爽伶俐的感觉，也好写好记，但是网上却搜到不少重名的… ；另外还在考虑的是如何让宝宝自己也参与到选名的过程中来。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;起源&quot;&gt;&lt;a href=&quot;#起源&quot; class=&quot;headerlink&quot; title=&quot;起源&quot;&gt;&lt;/a&gt;起源&lt;/h2&gt;&lt;p&gt;姓名作为一个人的符号，&lt;strong&gt;可能&lt;/strong&gt;伴随一生。一个好名字不仅给别人留下深刻的印象，也关系到一生的事业和人际关系。&lt;/p&gt;
+&lt;p&gt;故而郭某虽半生克己，却在宝宝取名上放任贪念，生怕错过一个可能性。即便自己想到的名字都挑不过来，还是在朋友圈、甚至同事匿名社区里求更多的名字建议，拿来投票做参考，最终结果如下：&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="东写西读" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/"/>
+    
+      <category term="生活点滴" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/"/>
+    
+    
+      <category term="取名" scheme="https://blogs.kainy.cn/tags/%E5%8F%96%E5%90%8D/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>小程序插件用户信息功能页调试问题的解决</title>
+    <link href="https://blogs.kainy.cn/2020/12/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8F%92%E4%BB%B6%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF%E5%8A%9F%E8%83%BD%E9%A1%B5/"/>
+    <id>https://blogs.kainy.cn/2020/12/小程序插件用户信息功能页/</id>
+    <published>2020-12-07T22:20:16.000Z</published>
+    <updated>2021-07-31T12:42:55.059Z</updated>
+    
+    <content type="html"><![CDATA[<p>事情起源于<a href="/2019/11/191119%E8%A3%82%E5%8F%98%E8%90%A5%E9%94%80%E6%B5%B7%E6%8A%A5%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8F%92%E4%BB%B6/?from=blogs-functional-page-navigator">《合成海报的小程序插件》</a>和<a href="/2020/11/201116%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8F%92%E4%BB%B6%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1/?from=blogs-functional-page-navigator">《小程序插件数据统计》</a>，想着在票圈海报的数据统计中，加入 openid 信息做为用户唯一标识，统计回访情况。本以为和小程序获取 openid 一样，静默授权即可。结果发现插件获取用户信息，比小程序中严格的多，openid 也需要显式的用户授权。用户信息授权用到了插件功能页，遇到了一些困难，记录一下。</p><a id="more"></a><p>小程序插件功能页的用途，官网有<a href="https://developers.weixin.qq.com/miniprogram/dev/framework/plugin/functional-pages.html" rel="external nofollow noopener noreferrer" target="_blank">详细介绍</a>，这里不赘述。</p><h2 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h2><p>用微信开发者工具导入官方的<a href="https://developers.weixin.qq.com/s/Uof4Iomt731Z" rel="external nofollow noopener noreferrer" target="_blank">代码片段</a>，只是修改了appid，其他无任何修改。</p><p>手机调试的时候无任何反应。</p><h2 id="根本原因"><a href="#根本原因" class="headerlink" title="根本原因"></a>根本原因</h2><p><strong>插件所有者小程序</strong> 的功能页特性未激活。具体来说，在插件所有者小程序的 app.json 文件中添加 functionalPages 定义段，并令其值为 true ，例如：</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"functionalPages"</span>: &#123;</span><br><span class="line">    <span class="attr">"independent"</span>: <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>其中最重要而容易遗漏的步骤，是先切换到“小程序模式“（下图），再激活功能页特性。一开始就是因为没有厘清 <strong>小程序插件</strong> ，和 <strong>插件所有者小程序</strong> 两个概念，绕了些弯路。</p><p>   <img src="https://wx2.sinaimg.cn/large/4d6e3e3bgy1glhkdp1qtkj20av04qdfw.jpg" alt="切换小程序模式"></p><h2 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h2><ul><li>微信开发工具打开项目后，先将插件模式切换到 <strong>小程序模式</strong> ，这时控制台会有报错，将 miniprogram 目录下 app.json 文件中，<code>plugins.myPlugin.verion</code> 的值改为 latest ，报错消失；</li></ul><p>   <img src="https://wx2.sinaimg.cn/large/4d6e3e3bgy1glhkdxp50zj20jc077mxh.jpg" alt="添加 functionalPages 定义段"></p><ul><li><p>添加 functionalPages 定义段，并令其值为 true ，例如：</p> <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"functionalPages"</span>: &#123;</span><br><span class="line">    <span class="attr">"independent"</span>: <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p>然后点微信开发者工具中的“预览”上传一次代码到开发环境，扫码访问。 这样功能页就打包到开发版小程序中了；</p></li><li><p>切换回 <strong>插件模式</strong>，在开发者工具上打开插件项目，将插件中 <code>functional-page-navigator</code> 中的 version 属性设置为 develop， app.json 文件中，<code>plugins.myPlugin.verion</code> 的值改回 dev</p></li><li><p>点击预览可以生成插件预览二维码，用测试用的真机扫码即可预览功能页；如果更改了插件代码，重新生成并扫描插件的预览二维码即可；</p></li><li><p>如果过了一段时间之后，跳转功能页时出现“开发版已过期”这样的提示，从第1步开始重试一次</p></li></ul><h2 id="一句话总结"><a href="#一句话总结" class="headerlink" title="一句话总结"></a>一句话总结</h2><p>其实就是要理解，插件功能页是打包到 <strong>插件所有者小程序</strong> 中并发布的（通过 <code>&quot;functionalPages&quot;: true</code> 申明）。可以把插件模式下的宿主小程序，当作第三方小程序，用户触发授权的时候，跳转到 <strong>插件所有者小程序</strong> 的插件功能页，在上面确认授权。</p><p>   <img src="https://wx2.sinaimg.cn/large/4d6e3e3bgy1glhmlxztjrj20n01dstd7.jpg" alt="添加 functionalPages 定义段"></p><div><hr><strong>为您推荐</strong><ul><li><a href="https://blogs.kainy.cn/2019/02/以webview为中心的小程序开发思考/">以webview为中心的小程序开发模式思考</a></li><li><a href="https://blogs.kainy.cn/2010/02/chrome版的Qzone插件发布/">chrome版的Qzone插件发布</a></li><li><a href="https://blogs.kainy.cn/2010/10/jQuery插件的创建方法/">jQuery插件的创建方法</a></li><li><a href="https://blogs.kainy.cn/2020/11/201116小程序插件数据统计/">小程序插件数据统计</a></li><li><a href="https://blogs.kainy.cn/2016/03/Android_WebView_前端开发调试/">Android WebView 前端开发调试</a></li><li><a href="https://blogs.kainy.cn/2018/03/180328总在深夜放大招，小程序官方团队真的没有X生活？/">总在深夜放大招，小程序官方团队真的没有性生活？</a></li></ul></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;事情起源于&lt;a href=&quot;/2019/11/191119%E8%A3%82%E5%8F%98%E8%90%A5%E9%94%80%E6%B5%B7%E6%8A%A5%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8F%92%E4%BB%B6/?from=blogs-functional-page-navigator&quot;&gt;《合成海报的小程序插件》&lt;/a&gt;和&lt;a href=&quot;/2020/11/201116%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8F%92%E4%BB%B6%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1/?from=blogs-functional-page-navigator&quot;&gt;《小程序插件数据统计》&lt;/a&gt;，想着在票圈海报的数据统计中，加入 openid 信息做为用户唯一标识，统计回访情况。本以为和小程序获取 openid 一样，静默授权即可。结果发现插件获取用户信息，比小程序中严格的多，openid 也需要显式的用户授权。用户信息授权用到了插件功能页，遇到了一些困难，记录一下。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://blogs.kainy.cn/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+      <category term="建站❤编程" scheme="https://blogs.kainy.cn/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E5%BB%BA%E7%AB%99%E2%9D%A4%E7%BC%96%E7%A8%8B/"/>
+    
+    
+      <category term="调试" scheme="https://blogs.kainy.cn/tags/%E8%B0%83%E8%AF%95/"/>
+    
+      <category term="小程序" scheme="https://blogs.kainy.cn/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/"/>
+    
+      <category term="插件" scheme="https://blogs.kainy.cn/tags/%E6%8F%92%E4%BB%B6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>小程序插件数据统计</title>
+    <link href="https://blogs.kainy.cn/2020/11/201116%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8F%92%E4%BB%B6%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1/"/>
+    <id>https://blogs.kainy.cn/2020/11/201116小程序插件数据统计/</id>
+    <published>2020-11-15T22:50:35.000Z</published>
+    <updated>2021-07-31T12:42:55.040Z</updated>
+    
+    <content type="html"><![CDATA[<p>之前上线了<a href="/2019/11/191119裂变营销海报小程序插件/?from=blog-plugin-statistic">一个简单配置即可合成图片海报的小程序插件——票圈海报</a>。虽然在微信公众平台可以看到不断被申请使用，但小程序官方目前并未提供小程序插件的数据统计功能，所以无法得知这些申请了使用权限的小程序，究竟有多少真正投入使用，以及调用的量有多少。于是想，是否能获得和小程序数据助手类似的 小程序插件的调用数据报告？</p><p>而由于插件是在前端合成图片，未和服务端进行数据交互，也就无法统计到插件被调用的次数。最终实现方式是在想要埋点取数的地方，向服务端发一个请求，通过nginx访问日志，分析上报的数据。</p><a id="more"></a><p>原始的 log 数据大概长这样：</p><p><img src="https://tva1.sinaimg.cn/large/4d6e3e3bgy1gkr2c2yz0wj214c088juk.jpg" alt="通过 nginx log 统计小程序插件数据"></p><p>我想要在报告中看到插件每天被调用的次数，就在生命周期函数 ready 中，调用 wx.request 发一个请求。通过这个请求的的服务端访问日志就可以看到访问者ip、访问时间、referrer、客户端UA 信息。</p><p>referrer 网址中，wx开头的18位字符串目录名，就是调用插件的小程序的 AppID， 通过这些信息，不仅可以分析到插件调用次数，还可以梳理出用户画像。</p><p>直接查看 log 毕竟费力，为了方便分析，需对数据做可视化处理，这里以 GoAccess（一个实时的 Web 日志分析器及交互式查看器，<a href="https://baidu.com.kainy.cn/?q=GoAccess&from=blog-plugin-statistic" title="帮你百度一下 GoAccess" rel="external nofollow noopener noreferrer" target="_blank">百度可搜到相关信息</a>，这里不赘述） 为例。</p><p><img src="https://tva1.sinaimg.cn/large/4d6e3e3bgy1gkr2zi9tztj21ia0r2wki.jpg" alt="小程序插件访问情况"></p><p><center>查看指定时间段的访问量（插件初始化次数）</center><br></p><p><img src="https://tva1.sinaimg.cn/large/4d6e3e3bgy1gkr3qorejpj218g0boq4n.jpg" alt="调用插件的小程序appid排名"></p><p><center>查看调用方appid和次数，需注意统计的时候需要将 referrer 字段作为主要变量</center><br></p><p><img src="https://tva1.sinaimg.cn/large/4d6e3e3bgy1gkr3vx68gqj21fu10w447.jpg" alt="操作系统排序按 [点击量, 平均响应时, 总共响应时, 最高响应时]"></p><p><center>操作系统</center><br></p><p><img src="https://tva1.sinaimg.cn/large/4d6e3e3bly1gkr41ek1kaj21g2134q9l.jpg" alt="浏览器排序按 [点击量, 平均响应时, 总共响应时, 最高响应时]"></p><p><center>浏览器</center><br></p><p>因为是个人项目时间有限，只实现一个简单版的数据统计，可大致了解小程序插件被调用的情况。如果有更深入分析的需求，还是建议将数据落库，用户画像什么的还是需精细的处理。</p><p>顺便安利一个通过appid查小程序名称的工具。就是我分析出了调用量比较大的几个appid后，想看看他们是如何调用插件的，是否能够从实际案例中找到可改进的点。公众号平台的插件管理后台，比较简陋，不支持通过appid搜索申请过插件使用权限的小程序，所以自己动手搞了个简单的小程序工具，有需要可搜索 “ <code>AppID查</code> ” 使用。</p><div><hr><strong>为您推荐</strong><ul><li><a href="https://blogs.kainy.cn/2009/12/用Google_Friend_Connect在WP博客中留言的插件/">用Google Friend Connect在WP博客中留言的插件</a></li><li><a href="https://blogs.kainy.cn/2019/02/以webview为中心的小程序开发思考/">以webview为中心的小程序开发模式思考</a></li><li><a href="https://blogs.kainy.cn/2010/02/chrome版的Qzone插件发布/">chrome版的Qzone插件发布</a></li><li><a href="https://blogs.kainy.cn/2018/07/博客／资讯类网页在小程序中分享的方案/">小程序分享网页方案</a></li><li><a href="https://blogs.kainy.cn/2010/10/jQuery插件的创建方法/">jQuery插件的创建方法</a></li><li><a href="https://blogs.kainy.cn/2010/01/寻能将WP中上传的附件（如图片）保存到其他ftp空间的插件/">寻能将WP中上传的附件（如图片）保存到其他ftp空间的插件</a></li></ul></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;之前上线了&lt;a href=&quot;/2019/11/191119裂变营销海报小程序插件/?from=blog-plugin-statistic&quot;&gt;一个简单配置即可合成图片海报的小程序插件——票圈海报&lt;/a&gt;。虽然在微信公众平台可以看到不断被申请使用，但小程序官方目前并未提供小程序插件的数据统计功能，所以无法得知这些申请了使用权限的小程序，究竟有多少真正投入使用，以及调用的量有多少。于是想，是否能获得和小程序数据助手类似的 小程序插件的调用数据报告？&lt;/p&gt;
+&lt;p&gt;而由于插件是在前端合成图片，未和服务端进行数据交互，也就无法统计到插件被调用的次数。最终实现方式是在想要埋点取数的地方，向服务端发一个请求，通过nginx访问日志，分析上报的数据。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="建站❤编程" scheme="https://blogs.kainy.cn/categories/%E5%BB%BA%E7%AB%99%E2%9D%A4%E7%BC%96%E7%A8%8B/"/>
+    
+    
+      <category term="小程序" scheme="https://blogs.kainy.cn/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/"/>
+    
+      <category term="插件" scheme="https://blogs.kainy.cn/tags/%E6%8F%92%E4%BB%B6/"/>
+    
+      <category term="数据" scheme="https://blogs.kainy.cn/tags/%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="统计" scheme="https://blogs.kainy.cn/tags/%E7%BB%9F%E8%AE%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>车主一周年小记</title>
+    <link href="https://blogs.kainy.cn/2020/07/%E8%BD%A6%E4%B8%BB%E4%B8%80%E5%91%A8%E5%B9%B4%E5%B0%8F%E8%AE%B0/"/>
+    <id>https://blogs.kainy.cn/2020/07/车主一周年小记/</id>
+    <published>2020-07-09T22:20:16.000Z</published>
+    <updated>2021-07-31T12:42:55.081Z</updated>
+    
+    <content type="html"><![CDATA[<p>几天前接到续保电话，才想起<a href="https://blogs.kainy.cn/2019/06/190627AionS/?from=车主一周年小记">提车已经一周年</a>了。<br>前半年只用于周末出游、拍婚纱照、接亲。其实常开也就近半年，因为疫情原因，还拉起了<a href="https://blogs.kainy.cn/2020/07/%E4%B8%BB%E6%B5%81%E9%A1%BA%E9%A3%8E%E8%BD%A6APP%E6%AF%94%E8%BE%83/?from=车主一周年小记">顺风车</a> 让车技娴熟不少。</p><a id="more"></a><h2 id="智能驾驶辅助"><a href="#智能驾驶辅助" class="headerlink" title="智能驾驶辅助"></a>智能驾驶辅助</h2><p>智能驾驶辅助几乎为我省去了一半的操作，下面拿几个比较明显的体会来说。</p><h3 id="多一道安全保障"><a href="#多一道安全保障" class="headerlink" title="多一道安全保障"></a>多一道安全保障</h3><p>行车辅助在紧急情况下会辅助控制方向盘或着刹车。有两次比较明显的感受：</p><p>新手上路的时候，有一次在高速上走最右车道行驶，应急车道原本停在原地开双闪的车突然起步左转，手还来不及反应方向盘就感受到左转的扭矩，避过一险；</p><p>还有一次也是在高速，因为刚开始用自适应巡航（跟车辅助），注意力都在前车，跟着前车并入主道时，没留意到左边有车，又一次感受到方向盘右转扭矩，和左车插肩而过后，才反应过来，看到后视镜里刚急刹的左车狂按喇叭闪灯 —— 估计对方也吓的不轻。事后感到庆幸，如果没有驾驶辅助，怕是要交不少新人学费了，辅助生效的那一瞬间的感觉，可以用“有如神助”来描述。</p><p>自动刹车除了几次跟车太近误触发，倒还没实际用过（希望以后都别用到）。养成和前车保持适当距离的习惯后，基本没再遇到。</p><h3 id="行车更轻松了"><a href="#行车更轻松了" class="headerlink" title="行车更轻松了"></a>行车更轻松了</h3><p>AionS 自动驾驶有两种模式 —— 定速巡航和自适应巡航。定速巡航适合城市道路，车辆会根据前车情况控制速度，司机需要控制转向。自适应巡航会控制速度和转向，转向控制是依据路面车道，而城市道路的车道比较复杂，所以不适合使用自适应巡航。</p><p>高速上启动自适应巡航，司机只要右脚搭在刹车，双手搭方向盘以备紧急情况。基本无需使劲，十分轻松。并且巡航系统控制速度的原理是依据前车的速度变化，反向推导本车应执行的操作，再控制本车的动力系统实现的跟车，这个过程就相当于对前车行驶操作进行了润色，会使得加减速比前车更为平缓，从而提升乘车体验。</p><h3 id="一些实用小技巧"><a href="#一些实用小技巧" class="headerlink" title="一些实用小技巧"></a>一些实用小技巧</h3><p>在距离汽车二十米内，蓝牙钥匙长按解锁键，即可开启所有四个车窗和天窗，提前通风换气；手机APP还可以通过移动网络开启窗，没有距离限制，这个在新车气味重的时候非常实用。要注意天气状况就是了。</p><p>远程启动：按蓝牙钥匙的“上锁”键，然后立即长按“启动“按键（第三排左边的顺时针圈圈）三秒左右，直到车灯亮起，就完成了整车启动的触发，可以松开按键。当你走近到门边，门会自动解锁。节省上车后启动，等待车机和发动机就绪的时间。</p><h2 id="两个优化建议"><a href="#两个优化建议" class="headerlink" title="两个优化建议"></a>两个优化建议</h2><p>车窗开启的时候，外面的声音对车内播放的声音干扰比较大，每次都要手动提高音量，如果可以关联起来，降窗时自动提高两格音量就方便多了。</p><p>还有就是顶部的太阳能面板，说是高温时候会启动通风换气，感觉存在感不高，也不知道也没有工作过，如果可以查到启动记录就更好啦。</p><h2 id="总结一些电车省钱技巧"><a href="#总结一些电车省钱技巧" class="headerlink" title="总结一些电车省钱技巧"></a>总结一些电车省钱技巧</h2><p>充电时间选择用电低谷，几乎可以少一半的电费，只是可能需要早起。</p><p>经过这一年的历练，车技娴熟了不少。可以从容应对各种路况，做到有得放矢 —— 想让的让，不想让的，比如插队加塞，就别想在我这有机可乘，晾着他难受一下，毕竟谁的时间还不是时间呢。但遇到公交车，一般还是愿意主动让一下，毕竟人家的载客量几倍与我，我让一秒钟，他们加起来就是几秒钟；另外，之前有两次钱包落公交车，被好心司机送到终点站找回的经历，也让自己对公交司机印象不错。</p><div><hr><strong>为您推荐</strong><ul><li><a href="https://blogs.kainy.cn/2019/06/190627AionS/">广汽AionS笔记（持续更新）</a></li></ul></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;几天前接到续保电话，才想起&lt;a href=&quot;https://blogs.kainy.cn/2019/06/190627AionS/?from=车主一周年小记&quot;&gt;提车已经一周年&lt;/a&gt;了。&lt;br&gt;前半年只用于周末出游、拍婚纱照、接亲。其实常开也就近半年，因为疫情原因，还拉起了&lt;a href=&quot;https://blogs.kainy.cn/2020/07/%E4%B8%BB%E6%B5%81%E9%A1%BA%E9%A3%8E%E8%BD%A6APP%E6%AF%94%E8%BE%83/?from=车主一周年小记&quot;&gt;顺风车&lt;/a&gt; 让车技娴熟不少。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="东写西读" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/"/>
+    
+      <category term="生活点滴" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/"/>
+    
+    
+      <category term="AionS" scheme="https://blogs.kainy.cn/tags/AionS/"/>
+    
+      <category term="车主" scheme="https://blogs.kainy.cn/tags/%E8%BD%A6%E4%B8%BB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>主流顺风车APP比较</title>
+    <link href="https://blogs.kainy.cn/2020/07/%E4%B8%BB%E6%B5%81%E9%A1%BA%E9%A3%8E%E8%BD%A6APP%E6%AF%94%E8%BE%83/"/>
+    <id>https://blogs.kainy.cn/2020/07/主流顺风车APP比较/</id>
+    <published>2020-07-06T22:20:16.000Z</published>
+    <updated>2021-07-31T12:42:55.051Z</updated>
+    
+    <content type="html"><![CDATA[<p>因为疫情原因，我开始驾车上下班，考虑到摊薄停车费和过路费等通勤成本，开启长期稳定的接单模式 —— 基本保持每天上下班接一单的频率。</p><p>这里结合小半年的使用体验，从车主关心的几个方面对三款主流拼车APP——嘀嗒出行、滴滴顺风车、哈啰出行做一个横向比较，供有共享空座想法的车主参考 <em>（滴滴最近上线一个叫花小猪的打车APP，号称打车版的拼多多，说白了也是拼车，不过是在下沉市场规避监管，同时利用熟人网络传播的套路，深圳没有开通，我也没体验过，这里不做讨论）</em></p><a id="more"></a><p>先说说自己接触各个拼车APP的情况：最开始使用的是哈啰出行，那时候滴滴顺风车在深圳还没恢复运营。</p><p>之后因为匹配度高的订单不多，又尝试了嘀嗒出行，一开始看这名字有点山寨滴滴的印象，只是因为 App Store 排名比哈罗出行靠前就下载试试，后来才知道嘀嗒出行的市场占有才是最高的。</p><p>一个月前，看到滴滴顺风车恢复深圳运营的新闻，也第一时间下载体验。截止目前，嘀嗒是自己接单的主力应用，而滴滴被暂时弃用，原因后面会说。</p><h2 id="拼车业务在APP内的地位：-嘀嗒-gt-滴滴-gt-哈啰"><a href="#拼车业务在APP内的地位：-嘀嗒-gt-滴滴-gt-哈啰" class="headerlink" title="拼车业务在APP内的地位： 嘀嗒 &gt; 滴滴 &gt; 哈啰"></a>拼车业务在APP内的地位： 嘀嗒 &gt; 滴滴 &gt; 哈啰</h2><p>对于这三款APP和背后的运营公司，拼车都不是其唯一业务，甚至不是主营业务，所以顺风车产品在整个APP内的地位各有差异。而产品地位对接下来要对比的指标，产生直接影响，所以首先总结。</p><p>嘀嗒出行和滴滴顺风车都是独立APP，APP内切换乘客和车主身份。从这一点看，两者打平。</p><p>但大家可能对 <strong>滴滴出行</strong> APP耳熟能详 —— 快车、专车、出租车业务都在里面。为顺风车单独打造一个 <strong>滴滴顺风车</strong> APP，貌似重视拼车业务，实则可能更多是出于合规或者隔离负面消息的考虑。</p><p>另外，近期在下沉市场打得火热的花小猪，据说也和滴滴有着千丝万缕的联系。感觉滴滴意图一线城市推滴滴顺风车，与竞品正面竞争；下沉市场推花小猪，农村包围城市，两条腿走路，助其夺回顺风车市场第一的宝座。</p><p>嘀嗒出行的前身叫“嘀嗒拼车”，整个APP只在乘客身份里，有拼车之外的出租车业务，可见拼车业务对于嘀嗒和滴滴的重要程度差异 —— 如果说顺风车业务对于嘀嗒是左膀右臂，对于滴滴可能只是左手手掌。</p><p>而哈啰顺风车入口则是在APP首页，单车和小件快送之后的第三个按钮位置，相当于是APP内的一个功能模块。</p><h2 id="订单量-嘀嗒-gt-滴滴-gt-＝-哈啰"><a href="#订单量-嘀嗒-gt-滴滴-gt-＝-哈啰" class="headerlink" title="订单量: 嘀嗒 &gt; 滴滴 &gt;＝ 哈啰"></a>订单量: 嘀嗒 &gt; 滴滴 &gt;＝ 哈啰</h2><p>这里的订单量指的是路线和时间的匹配度都足够高的订单数量，这直接影响到车主接单的效率和意愿。</p><p>嘀嗒上发布行程，基本上前十条都足够顺路，然后在里面选择时间匹配单即可，而滴滴和哈啰，可能就前面1～3条路线匹配，时间的话就看运气了。随着滴滴用户量增加，和哈啰的差距预计会拉大。</p><p>奇怪的是，滴滴的路线匹配值标的也低，即使非常顺路的单，匹配度也就70%，不知道是否和试运营有关。</p><h2 id="订单价格：-滴滴-gt-哈啰-gt-嘀嗒"><a href="#订单价格：-滴滴-gt-哈啰-gt-嘀嗒" class="headerlink" title="订单价格： 滴滴 &gt; 哈啰 &gt;= 嘀嗒"></a>订单价格： 滴滴 &gt; 哈啰 &gt;= 嘀嗒</h2><p>价格一般是我选择拼车订单考虑的第二因素，从计费规则可以看到，对于跨城订单，三者都是默认选择高速路线，计价也包含了高速费用。</p><p>而市内订单，嘀嗒和哈啰都是需要车主和乘客协商，而滴滴不允许车主向乘客额外收取费用，也就可以理解为订单价格默认包含了高速费用。</p><p>所以同样路线，滴滴每单价格基本是最高的，其次是哈啰，而嘀嗒价格最低，但是一般如果提出平摊高速费，乘客都是愿意的。</p><h2 id="功能限制：-滴滴-gt-哈啰-gt-嘀嗒"><a href="#功能限制：-滴滴-gt-哈啰-gt-嘀嗒" class="headerlink" title="功能限制： 滴滴 &gt; 哈啰 &gt;= 嘀嗒"></a>功能限制： 滴滴 &gt; 哈啰 &gt;= 嘀嗒</h2><p>这是一个反向指标，比较的是规则对车主接单的限制，比如三个APP现阶段都禁止半夜接单，以及每天的接单数上限。</p><p>而除此之外，滴滴顺风车还限制每周最多发布两条自定义路线，也就是说每周只有一次机会接常规行程之外的顺风单，比如你常规路线设置了上下班，周末开车出门办事想接个顺风单，就只能接其中的一个行程，这应该是出于避免全职司机混入的考量，却也伤及了正常用户。</p><p>哈啰和嘀嗒，不仅无此限制，还可以查看附近的订单。</p><p>嘀嗒的提现有每周二、五的时间限制，不知是出于资金安全考虑还是资金沉淀？我倒不太在意这点。</p><h2 id="操作体验：-嘀嗒-gt-滴滴-gt-哈啰"><a href="#操作体验：-嘀嗒-gt-滴滴-gt-哈啰" class="headerlink" title="操作体验： 嘀嗒 &gt;= 滴滴 &gt; 哈啰"></a>操作体验： 嘀嗒 &gt;= 滴滴 &gt; 哈啰</h2><p>交互体验上，嘀嗒和滴滴都不错，不过嘀嗒有个问题，就是到达终点附近自动点击到达，却有时无法“极速到账”，原因又是未送达乘客终点附近… 有点自相矛盾了。</p><p>滴滴在产品设计上有个亮点在于，接单时候会展示到达乘客起点位置的预估时长，从而推算出发时间，这样可以辅助车主判断是否接单。</p><p>而哈啰有个槽点，就是我在晚上点开上班的常规路线，返回的是今天最接近当前时间的订单，我需要每次手动把出发时间调成明天。而滴滴嘀嗒会自动匹配明天早上的订单，这才是用户真实意图。</p><h2 id="客服体验：-嘀嗒-gt-滴滴-gt-哈啰"><a href="#客服体验：-嘀嗒-gt-滴滴-gt-哈啰" class="headerlink" title="客服体验： 嘀嗒 &gt; 滴滴 &gt;= 哈啰"></a>客服体验： 嘀嗒 &gt; 滴滴 &gt;= 哈啰</h2><p>滴滴和哈啰做的都不太好，滴滴预期等待时长基本要乘一个三到五倍到系数，比如提示预计两分钟，实际等待可能是十分钟。</p><p>而哈啰更奇葩，客服默认是人工智障的机器人回答，啰嗦半天转人工，基本也要等待十几分钟。</p><p>嘀嗒的客服我只用过一次，是乘客中途取消订单，嘀嗒的客服类似工单提交，并且很快就出结果，有短信通知。相比需要等待的人工客服，异步化的处理，时间和精力成本较低。当然，嘀嗒也有人工客服，但我目前还没用到。</p><h2 id="判罚公正度：-嘀嗒-gt-哈啰-gt-滴滴"><a href="#判罚公正度：-嘀嗒-gt-哈啰-gt-滴滴" class="headerlink" title="判罚公正度： 嘀嗒 &gt; 哈啰 &gt; 滴滴"></a>判罚公正度： 嘀嗒 &gt; 哈啰 &gt; 滴滴</h2><p>拼车难免遇到订单取消的情况，三个平台上我都遇到过。</p><p>嘀嗒一次，是我在接乘客途中被临时取消，乘客全责。</p><p>滴滴两次，第一次是遇上堵车，我迟到五分钟被取消，我全责，被乘客索赔五元。</p><p>那以后我接滴滴单就比较留意出发时间，一般都提前到，可有一天乘客因为培训拖堂，超时十分钟还没到，沟通后取消，滴滴还是判我的责任，理由是“未按约定时间到达上车地点”，我也是一脸懵逼 —— 迟到不行，早到还不行么？于是有了上述的客服沟通，体验并不好，又在路边浪费了半小时，最后改判为双方无责。</p><p>那以后就卸载了滴滴顺风车，主要考量是滴滴单价虽高，但是建立在驾乘双方地位不平等的前提下，遇到一两个取消的，十个订单差价都未必补的回来，机会成本高，还坏了心情，干脆卸载了之 —— 你开心就好，哥不陪你跪。</p><h2 id="推荐-amp-邀请"><a href="#推荐-amp-邀请" class="headerlink" title="推荐&amp;邀请"></a>推荐&amp;邀请</h2><p>以上对比根据自己近半年的使用体验总结，个人觉得嘀嗒是三个APP中最成熟的。</p><p>上述指标之间也有相互影响——比如滴滴定价高，就可能影响它判罚的公正度（或者说判罚标准）。哈啰顺风车是哈啰出行子模块，那么客服功能也就”有胜无“的水平。</p><p>接单的过程中，发现拼车乘客中，有车族的比例其实蛮高的，他们往往因为应酬不便开车、车在保养维修，或者纯粹不想开车而选择搭顺风车。</p><p>后来想想也非偶然，毕竟就算是拼车，价格也比乘坐公共交通工具高出不少，但比起自己开车的成本又稍低一些，价格上车主比较容易接受。</p><p>通过合乘，大家平摊了出行成本，同时减少了上路私家车的数量，为缓解交通拥堵出了份力，受益者不止驾乘双方，何乐而不为呢？有兴趣的车主可以微信扫码注册，你我都有奖励。需要准备身份证、驾驶证、行驶证，认证后即可开始接单～ </p><p><img src="https://wx2.sinaimg.cn/large/4d6e3e3bgy1ggjmq68xz2j20n01ds4i4.jpg" alt="嘀嗒顺风车车主邀请码" style="width:50%"></p><p><em>（这里仅推荐嘀嗒顺风车，其他平台可以自行下载注册噢）</em></p><h2 id="收获和小结"><a href="#收获和小结" class="headerlink" title="收获和小结"></a>收获和小结</h2><p>拼车的乘客中，有带初到深圳的弟弟去莲花山公园的姐姐，介绍一个建筑几年前的样子——那是她当时最喜欢的房子…</p><p>有刚从饭局回来的夫妻，担心着没送成的三万现金，可能意味着孩子择校的问题“校领导”也没十足把握…</p><p>有出差到深马不停蹄，赶往公明厂区的父亲，利用路程时间和家里亲戚视频，喊年幼儿子名字时略带骄傲的口音…</p><p>先后有来自平安银行、江苏银行、民生银行、光大银行、宁波银行、中信银行和交通银行的同行乘客…</p><p>透过这些生活里接触不到的生活碎片，从另一个角度观察这个社会。</p><p>通过拼车，还能尽可能多的探索这座城市的每一个角落，看每一次经过时的变化。</p><p>通过拼车，更深入地了解这座城市和生活在这里的人们，便是最大收获。</p><p>当然了，还有拼车费用这一最直接的收获，几乎填补了自己通勤的交通费。倒是一举多得。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;因为疫情原因，我开始驾车上下班，考虑到摊薄停车费和过路费等通勤成本，开启长期稳定的接单模式 —— 基本保持每天上下班接一单的频率。&lt;/p&gt;
+&lt;p&gt;这里结合小半年的使用体验，从车主关心的几个方面对三款主流拼车APP——嘀嗒出行、滴滴顺风车、哈啰出行做一个横向比较，供有共享空座想法的车主参考 &lt;em&gt;（滴滴最近上线一个叫花小猪的打车APP，号称打车版的拼多多，说白了也是拼车，不过是在下沉市场规避监管，同时利用熟人网络传播的套路，深圳没有开通，我也没体验过，这里不做讨论）&lt;/em&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="东写西读" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/"/>
+    
+      <category term="生活点滴" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/"/>
+    
+    
+      <category term="顺风车" scheme="https://blogs.kainy.cn/tags/%E9%A1%BA%E9%A3%8E%E8%BD%A6/"/>
+    
+      <category term="共享" scheme="https://blogs.kainy.cn/tags/%E5%85%B1%E4%BA%AB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>分享组件改版小结</title>
+    <link href="https://blogs.kainy.cn/2020/04/%E5%88%86%E4%BA%AB%E7%BB%84%E4%BB%B6%E6%94%B9%E7%89%88%E5%B0%8F%E7%BB%93/"/>
+    <id>https://blogs.kainy.cn/2020/04/分享组件改版小结/</id>
+    <published>2020-04-23T22:20:16.000Z</published>
+    <updated>2021-07-31T12:42:55.054Z</updated>
+    
+    <content type="html"><![CDATA[<p>分享组件是全站通用组件，用于自定义分享信息、统计推荐关系，是营销团队打包输出 MGM 能力的重要工具。</p><p>分享组件支持集团内外部应用宿主（微信、金管家、银行、证券等app）中，分享链接/海报到不同渠道（微信、微博、行员app、快乐平安等）。</p><h2 id="效果预览"><a href="#效果预览" class="headerlink" title="效果预览"></a>效果预览</h2><p>改版前后的截图：</p><p><img src="https://tvax2.sinaimg.cn/large/4d6e3e3bgy1gjciqeotaoj20sg0lctc5.jpg" alt="平安银行分享组件改版前后截图"></p><a id="more"></a><h2 id="需求背景"><a href="#需求背景" class="headerlink" title="需求背景"></a>需求背景</h2><p>改版前分享组件面临的挑战主要有两个：</p><ol><li>UI层面——弹窗面板空间有限，最多仅能展示六个分享图标；</li><li>扩展性——原先组件打包为单一文件，含有所有宿主的逻辑和依赖文件，随着渠道和业务逻辑增加，文件尺寸越来越大，达到性能瓶颈。</li></ol><p>这和之前<a href="https://blogs.kainy.cn/2018/12/%E5%BE%AE%E6%B5%B7%E6%8A%A52018%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E5%9B%9E%E9%A1%BE/">微海报改版</a>需求背景有共通之处。</p><h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><p>针对第一个挑战，我们将页面居中弹窗，改为底部弹层，单行四个，超出则可滚动。</p><p>针对第二个挑战，将单文件拆分为二，做了异步加载。并划分为同步模块、异步模块、渠道模块，实现按需加载。</p><p>盗用罗帅的结构图：</p><p><img src="https://tva1.sinaimg.cn/large/4d6e3e3bgy1gjcisjesbzj212k0ijdgm.jpg" alt="分享组件结构图"></p><p>改版前后的文件构成图：</p><p><img src="https://tva3.sinaimg.cn/large/4d6e3e3bgy1gjcisww1xvj20m80gota4.jpg" alt="分享组件文件构成图"></p><p>左边是单一文件，所有依赖和逻辑代码在一个文件中，随着业务逻辑日益复杂和接入的渠道增加，文件尺寸和维护难题渐渐显露。</p><p>右边是拆分后的，其中 loader 模块负责环境判断和UI、事件绑定等初始化操作。<br>可异步执行的逻辑如请求流水号，放到 AsyncMode 类。<br>渠道专有逻辑，继承 AsyncMode 类，和 jssdk 一起，各个渠道分别打包到 asyncMode**.js 文件中。</p><p>文件名中的**，为渠道名称首字母缩写，loader 根据宿主环境判断加载对应的渠道 AsyncMode 文件。比如页面投放到微信，loader 会加载 asyncModeWX.js 文件，投放到金管家app，则加载 asyncModeJGJ.js 文件。这样就实现了不同渠道的逻辑代码隔离，避免互相牵扯，缩减加载的冗余代码。</p><p>工程化方面，组件使用 typescript 编写，构建采用 rollup （TS 的类型系统和 ES6 特性支持，特别是 Class 用在新版组件里，真香！）</p><h2 id="组件工具库-kits"><a href="#组件工具库-kits" class="headerlink" title="组件工具库 kits"></a>组件工具库 kits</h2><p>改版过程中还产生个副产物 <a href="https://github.com/wepm/kits/" target="_blank" rel="external nofollow noopener noreferrer">kits</a> 工具库，其实就是 zepto 的精简版——由于原来的组件依赖 zepto ，这对于越来越多外部页面接入的通用组件而言显然不合时宜，所以需要剥离依赖。有想过改用原生写法，但这样一来基本就成了纯体力活，且后续维护不便。就想着不如把组件所使用到的 zepto 方法抽离出来，后续还可进一步优化，顺便可以归纳一下组件中常用的库工具方法是哪些。结果如下：</p><h3 id="Core"><a href="#Core" class="headerlink" title="Core"></a>Core</h3><ul><li>$()</li><li><del>$.camelCase</del></li><li>$.contains</li><li>$.each</li><li>$.extend</li><li><del>$.fn</del></li><li><del>$.grep</del></li><li><del>$.inArray</del></li><li>$.isArray</li><li>$.isFunction</li><li>$.isNumeric</li><li><del>$.isPlainObject</del></li><li><del>$.isWindow</del></li><li>$.map</li><li><del>$.noop</del></li><li><del>$.parseJSON</del></li><li><del>$.trim</del></li><li>$.type</li><li><del>add</del></li><li>addClass</li><li><del>after</del></li><li>append</li><li>appendTo</li><li>attr</li><li><del>before</del></li><li><del>children</del></li><li><del>clone</del></li><li>closest</li><li><del>concat</del></li><li>contents</li><li>css</li><li><del>data</del></li><li>each</li><li>empty</li><li>eq</li><li><del>filter</del></li><li><del>find</del></li><li><del>first</del></li><li><del>forEach</del></li><li><del>get</del></li><li><del>has</del></li><li>hasClass</li><li><del>height</del></li><li>hide</li><li>html</li><li><del>index</del></li><li><del>indexOf</del></li><li>insertAfter</li><li>insertBefore</li><li><del>is</del></li><li><del>last</del></li><li>map</li><li><del>next</del></li><li><del>not</del></li><li><del>offset</del></li><li><del>offsetParent</del></li><li><del>parent</del></li><li>parents</li><li>pluck</li><li><del>position</del></li><li>prepend</li><li>prependTo</li><li><del>prev</del></li><li><del>prop</del></li><li><del>push</del></li><li><del>ready</del></li><li><del>reduce</del></li><li>remove</li><li>removeAttr</li><li>removeClass</li><li><del>removeProp</del></li><li><del>replaceWith</del></li><li><del>scrollLeft</del></li><li><del>scrollTop</del></li><li>show</li><li><del>siblings</del></li><li><del>size</del></li><li>slice</li><li>text</li><li><del>toggle</del></li><li>toggleClass</li><li><del>unwrap</del></li><li>val</li><li><del>width</del></li><li><del>wrap</del></li><li><del>wrapAll</del></li><li><del>wrapInner</del></li></ul><h3 id="Detect"><a href="#Detect" class="headerlink" title="Detect"></a>Detect</h3><ul><li><del>Detect module</del></li></ul><h3 id="Event"><a href="#Event" class="headerlink" title="Event"></a>Event</h3><ul><li><del>$.Event</del></li><li><del>$.proxy</del></li><li><del>bind</del></li><li><del>delegate</del></li><li><del>die</del></li><li><del>event.isDefaultPrevented</del></li><li><del>event.isImmediatePropagationStopped</del></li><li><del>event.isPropagationStopped</del></li><li><del>live</del></li><li><del>off</del></li><li>on</li><li><del>one</del></li><li><del>trigger</del></li><li><del>triggerHandler</del></li><li><del>unbind</del></li><li><del>undelegate</del></li></ul><h3 id="Ajax"><a href="#Ajax" class="headerlink" title="Ajax"></a>Ajax</h3><ul><li>$.ajax</li><li>$.ajaxJSONP</li><li>$.ajaxSettings</li><li><del>$.get</del></li><li><del>$.getJSON</del></li><li>$.param</li><li><del>$.post</del></li><li><del>load</del></li></ul><h3 id="Form"><a href="#Form" class="headerlink" title="Form"></a>Form</h3><ul><li><del>serialize</del></li><li><del>serializeArray</del></li><li><del>submit</del><h3 id="Effects"><a href="#Effects" class="headerlink" title="Effects"></a>Effects</h3></li><li><del>$.fx</del></li><li><del>animate</del><h3 id="Touch"><a href="#Touch" class="headerlink" title="Touch"></a>Touch</h3></li><li><del>Touch events</del></li></ul><p>精简后的代码连注释不到800行，如果不要 ajax 相关方法，挪出所在匿名函数即可，可再减少 300 行代码，算是抄了个轮子吧… 不过还蛮适合组件使用的。</p><p>想起七年前在17173参与的第一个组件——登录弹窗组件，直接 <code>&lt;iframe src=&quot;javascript:</code> 后面 <code>document.write</code> style 和 script 标签，实现资源动态、异步加载，极大缩减启动脚本文件尺寸，并实现组件环境和宿主页环境的隔离，还支持到 ie6 版本。方案沿用至今想来是没什么大的问题。竟有些怀念当时满满的草莽气息。</p><p><img src="https://tva2.sinaimg.cn/large/4d6e3e3bgy1gjcitgymj0j21po16qe81.jpg" alt="17173扽股弹窗"></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;分享组件是全站通用组件，用于自定义分享信息、统计推荐关系，是营销团队打包输出 MGM 能力的重要工具。&lt;/p&gt;
+&lt;p&gt;分享组件支持集团内外部应用宿主（微信、金管家、银行、证券等app）中，分享链接/海报到不同渠道（微信、微博、行员app、快乐平安等）。&lt;/p&gt;
+&lt;h2 id=&quot;效果预览&quot;&gt;&lt;a href=&quot;#效果预览&quot; class=&quot;headerlink&quot; title=&quot;效果预览&quot;&gt;&lt;/a&gt;效果预览&lt;/h2&gt;&lt;p&gt;改版前后的截图：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://tvax2.sinaimg.cn/large/4d6e3e3bgy1gjciqeotaoj20sg0lctc5.jpg&quot; alt=&quot;平安银行分享组件改版前后截图&quot;&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://blogs.kainy.cn/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+      <category term="建站❤编程" scheme="https://blogs.kainy.cn/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E5%BB%BA%E7%AB%99%E2%9D%A4%E7%BC%96%E7%A8%8B/"/>
+    
+    
+      <category term="分享组件" scheme="https://blogs.kainy.cn/tags/%E5%88%86%E4%BA%AB%E7%BB%84%E4%BB%B6/"/>
+    
+      <category term="改版" scheme="https://blogs.kainy.cn/tags/%E6%94%B9%E7%89%88/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>婚礼感谢信</title>
+    <link href="https://blogs.kainy.cn/2020/01/200113%E5%A9%9A%E7%A4%BC%E8%AF%B4%E7%82%B9%E5%95%A5/"/>
+    <id>https://blogs.kainy.cn/2020/01/200113婚礼说点啥/</id>
+    <published>2020-01-12T22:50:35.000Z</published>
+    <updated>2021-07-31T12:42:55.039Z</updated>
+    
+    <content type="html"><![CDATA[<p>此刻，站在台上的我内心无（慌）比（的）激（一）动（比），但还是有几个感谢要讲。</p><p>首先要感谢我和新娘的父母、家人，还有一直关心、支持我们婚姻大事的长辈们，希望今天这份答卷能让你们满意。今后我会肩负起照顾父母和家庭的责任，努力做一个好丈夫好儿子。</p><p><img src="https://tvax2.sinaimg.cn/large/4d6e3e3bgy1gjcityiayhg20sg0izx6p.gif" alt="长辈" style="width: 400px;"></p><a id="more"></a><p>还要感谢站在我身边的这位的新娘，她给我生活带来很大的变化——从前的我生活比较单调，平日里除了上下班，就是偶尔参加行业活动，还有一个人的旅行，母亲大人不止一次说我“不食人间烟火”。现在我们周末在家学做饭、走绿道、学艾灸，一起泡脚、敷面膜，高速路上也喝上热汤和自嗨锅… 她让我尝试了很多从前未知的领域，也对未来有了更多的期待。</p><p><img src="https://tva1.sinaimg.cn/large/4d6e3e3bgy1gjciuicatzg20sg16onpf.gif" alt="我们" style="width: 400px;"></p><p>感谢今天到场的<a href="https://kainy.cn/pailixiang/album_ia595466900.html?ADTAG=blogs.post" target="_blank">老师、同学和朋友们</a>，特别是从异地专程赶来的同学朋友。无法到场的缘由千千万，我虽遗憾却能够理解，而能够到场的理由只有一个，我想我也会更加珍视这一份情谊。坦白讲，这么多同学应邀，我有些意外，发出邀请前纠结了一番 —— 感觉自己在班级的存在感一向不高，而且毕业这么久了。但转念一想，三年以上朝夕相处，又相识十年以上的关系，不知大家的情况如何，至少对于我，除了同窗外并没多少。谢谢大家捧场！</p><p><img src="https://tvax2.sinaimg.cn/large/4d6e3e3bgy1gjcium8wb4g20sg0ixx6p.gif" alt="同学" style="width: 400px;"></p><p>今后我们大概率定居深圳。小家在深圳，大家在永安和武穴，每年过年希望能和大家多聚聚，平时大家有来深圳也欢迎联系。</p><p><img src="https://tva2.sinaimg.cn/large/4d6e3e3bgy1gjciuqneofg20sg0ixx6p.gif" alt="迎亲" style="width: 400px;"></p><h1 id="一些玩意"><a href="#一些玩意" class="headerlink" title="一些玩意"></a>一些玩意</h1><ul><li>邀请小程序：<img style="width:200px;" class="nofancybox" src="https://wx1.sinaimg.cn/large/4d6e3e3bgy1gaie955wk9j20by0bydi6.jpg" alt="婚礼小程序"></li><li>电子请柬：<img style="width:200px;" class="nofancybox" src="https://tva1.sinaimg.cn/large/4d6e3e3bgy1gbjm11xsorj20by0byabo.jpg" alt="电子请柬"></li><li>婚礼祝福墙：<img style="width:200px;" class="nofancybox" src="https://tvax4.sinaimg.cn/large/4d6e3e3bgy1gbjlvcx4fuj20b20aqjy4.jpg" alt="祝福墙"></li><li>婚礼现场照片直播：<a href="https://kainy.cn/pailixiang/album_ia595466900.html?ADTAG=blogs.post" target="_blank"><br><img style="width:200px;" class="nofancybox" src="https://tva4.sinaimg.cn/large/4d6e3e3bgy1gbjm40ecv9j20a40a4wel.jpg" alt="⛪️ 郭郭和艳方的婚礼⛪️"><br></a></li></ul><div><hr><strong>为您推荐</strong><ul><li><a href="https://blogs.kainy.cn/2010/09/充实自己与把妹精神/">充实自己与把妹精神</a></li><li><a href="https://blogs.kainy.cn/2010/01/春节回家给家人带什么最贴心？【转】/">春节回家给家人带什么最贴心？【转】</a></li><li><a href="https://blogs.kainy.cn/2009/12/说说这几天的事/">说说这几天的事</a></li><li><a href="https://blogs.kainy.cn/2020/01/200102婚礼小程序/">婚礼小程序</a></li></ul></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;此刻，站在台上的我内心无（慌）比（的）激（一）动（比），但还是有几个感谢要讲。&lt;/p&gt;
+&lt;p&gt;首先要感谢我和新娘的父母、家人，还有一直关心、支持我们婚姻大事的长辈们，希望今天这份答卷能让你们满意。今后我会肩负起照顾父母和家庭的责任，努力做一个好丈夫好儿子。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://tvax2.sinaimg.cn/large/4d6e3e3bgy1gjcityiayhg20sg0izx6p.gif&quot; alt=&quot;长辈&quot; style=&quot;width: 400px;&quot;&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="东写西读" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/"/>
+    
+      <category term="生活点滴" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/"/>
+    
+    
+      <category term="生活" scheme="https://blogs.kainy.cn/tags/%E7%94%9F%E6%B4%BB/"/>
+    
+      <category term="婚礼" scheme="https://blogs.kainy.cn/tags/%E5%A9%9A%E7%A4%BC/"/>
+    
+      <category term="父母" scheme="https://blogs.kainy.cn/tags/%E7%88%B6%E6%AF%8D/"/>
+    
+      <category term="同学" scheme="https://blogs.kainy.cn/tags/%E5%90%8C%E5%AD%A6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>婚礼小程序</title>
+    <link href="https://blogs.kainy.cn/2020/01/200102%E5%A9%9A%E7%A4%BC%E5%B0%8F%E7%A8%8B%E5%BA%8F/"/>
+    <id>https://blogs.kainy.cn/2020/01/200102婚礼小程序/</id>
+    <published>2020-01-01T22:50:35.000Z</published>
+    <updated>2021-07-31T12:42:55.039Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="小程序名称"><a href="#小程序名称" class="headerlink" title="小程序名称"></a>小程序名称</h2><p>婚礼邀请纪念册（原名：欢迎参加郭郭和艳方的婚礼）</p><h2 id="小程序描述"><a href="#小程序描述" class="headerlink" title="小程序描述"></a>小程序描述</h2><p>这是一个婚礼邀约小程序，主要功能有：</p><a id="more"></a><ul><li>1、婚纱照展示和分享；</li><li>2、抵达现场的路线规划；</li><li>3、消息订阅功能——订阅婚礼和相册动态；</li><li>4、照片<a href="/2019/11/191119裂变营销海报小程序插件/">海报生成</a>和保存；</li><li>5、<a href="https://wx3.sinaimg.cn/mw690/4d6e3e3bgy1gaazlnzuicj20w416tak0.jpg" target="_blank" rel="external nofollow noopener noreferrer">祝福墙</a>；</li><li>6、联系我们。</li></ul><h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>制作小程序的初心很简单——两个人辛辛苦苦，费钱又费力的拍了四组婚纱照，总不能发个朋友圈就算了。刚好微信小程序很适合相片的展示和传播，而自己又具备开发能力。只要微信不倒，小程序就存在着，很有纪念意义。于是花了些功夫制作了这样一个相册，后面又陆续增加了酒店路线规划（地图导航）和祝福墙、海报等功能。</p><h2 id="扫小程序码体验"><a href="#扫小程序码体验" class="headerlink" title="扫小程序码体验"></a>扫小程序码体验</h2><p><img src="https://wx1.sinaimg.cn/large/4d6e3e3bgy1gaie955wk9j20by0bydi6.jpg" alt="小程序码" style="width: 200px;" data-x="https://wx1.sinaimg.cn/large/4d6e3e3bgy1gaie94yh79j209n09n3yh.jpg"></p><h2 id="小程序截图"><a href="#小程序截图" class="headerlink" title="小程序截图"></a>小程序截图</h2><p><img src="https://wx1.sinaimg.cn/large/4d6e3e3bgy1gaieb9t5abj20jg15oqe6.jpg" alt="小程序截图-目录" style="width: 200px;"></p><p><img src="https://wx1.sinaimg.cn/large/4d6e3e3bgy1gaiebkb41yj20j815chdt.jpg" alt="小程序截图-相册" style="width: 200px;"></p><p><img src="https://wx1.sinaimg.cn/large/4d6e3e3bgy1gaieba37iej20je15k4hs.jpg" alt="小程序截图-海报" style="width: 200px;"></p><p><img src="https://wx1.sinaimg.cn/large/4d6e3e3bgy1gaieb7cpv2j20jg15me0u.jpg" alt="小程序截图-路线规划" style="width: 200px;"></p><p><img src="https://wx1.sinaimg.cn/large/4d6e3e3bgy1gaiebh00qkj20ji15ke81.jpg" alt="小程序截图-尾页" style="width: 200px;"></p><h2 id="写给恰在准备婚礼的你"><a href="#写给恰在准备婚礼的你" class="headerlink" title="写给恰在准备婚礼的你"></a>写给恰在准备婚礼的你</h2><p>如果你也对这个婚礼小程序感兴趣，可以联系我提供技术支持（适当收费），只要简单申请一个小程序并提供相册素材，就可以拥有一个功能完备的小程序。</p><p>往后在微信里搜索你和另一半的昵称（如：“ 郭郭和艳方 ”），就可以找到你们在微信世界里的小窝。想想多年后看到这些珍贵影像，和祝福墙上的好友头像，会是什么感受呢？毕竟对于大部分人而言，婚礼经历一生中也许就这一次。每对恋人都值得拥有一个专属于自己爱情的小程序。</p><div><hr><strong>为您推荐</strong><ul><li><a href="https://blogs.kainy.cn/2011/04/Glass_Onion_-_win7主题一键安装包/">Glass_Onion - win7主题一键安装包</a></li><li><a href="https://blogs.kainy.cn/2019/02/以webview为中心的小程序开发思考/">以webview为中心的小程序开发模式思考</a></li><li><a href="https://blogs.kainy.cn/2010/09/充实自己与把妹精神/">充实自己与把妹精神</a></li><li><a href="https://blogs.kainy.cn/2018/07/博客／资讯类网页在小程序中分享的方案/">小程序分享网页方案</a></li><li><a href="https://blogs.kainy.cn/2010/01/春节回家给家人带什么最贴心？【转】/">春节回家给家人带什么最贴心？【转】</a></li><li><a href="https://blogs.kainy.cn/2020/11/201116小程序插件数据统计/">小程序插件数据统计</a></li></ul></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;小程序名称&quot;&gt;&lt;a href=&quot;#小程序名称&quot; class=&quot;headerlink&quot; title=&quot;小程序名称&quot;&gt;&lt;/a&gt;小程序名称&lt;/h2&gt;&lt;p&gt;婚礼邀请纪念册（原名：欢迎参加郭郭和艳方的婚礼）&lt;/p&gt;
+&lt;h2 id=&quot;小程序描述&quot;&gt;&lt;a href=&quot;#小程序描述&quot; class=&quot;headerlink&quot; title=&quot;小程序描述&quot;&gt;&lt;/a&gt;小程序描述&lt;/h2&gt;&lt;p&gt;这是一个婚礼邀约小程序，主要功能有：&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="建站❤编程" scheme="https://blogs.kainy.cn/categories/%E5%BB%BA%E7%AB%99%E2%9D%A4%E7%BC%96%E7%A8%8B/"/>
+    
+    
+      <category term="小程序" scheme="https://blogs.kainy.cn/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/"/>
+    
+      <category term="生活" scheme="https://blogs.kainy.cn/tags/%E7%94%9F%E6%B4%BB/"/>
+    
+      <category term="婚礼" scheme="https://blogs.kainy.cn/tags/%E5%A9%9A%E7%A4%BC/"/>
+    
+      <category term="作品" scheme="https://blogs.kainy.cn/tags/%E4%BD%9C%E5%93%81/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>坦诚</title>
+    <link href="https://blogs.kainy.cn/2019/12/191226%E5%9D%A6%E8%AF%9A/"/>
+    <id>https://blogs.kainy.cn/2019/12/191226坦诚/</id>
+    <published>2019-12-25T22:50:35.000Z</published>
+    <updated>2021-07-31T12:42:55.039Z</updated>
+    
+    <content type="html"><![CDATA[<p>人与人之间，无论关系亲疏，由于自身经历和对事理解上的偏差，难免会有误解。</p><p>若对对方对行为有所困惑，及时提出并解决难道不是更好的解决之道？</p><p>——有些困惑或许难于启齿，需要冒着被误解的风险指出。但经解释意识到误解所在，达成共识并全力支持。想要长期经营好人与人的关系，难道不是应该这样，而去粗暴的归因到自己固有观点？</p><p>那样处理固然简单，却非但无益于分歧解决，反而使得既成观念被加强和“证实”，从而形成偏见。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;人与人之间，无论关系亲疏，由于自身经历和对事理解上的偏差，难免会有误解。&lt;/p&gt;
+&lt;p&gt;若对对方对行为有所困惑，及时提出并解决难道不是更好的解决之道？&lt;/p&gt;
+&lt;p&gt;——有些困惑或许难于启齿，需要冒着被误解的风险指出。但经解释意识到误解所在，达成共识并全力支持。想要长期经营
+      
+    
+    </summary>
+    
+      <category term="心路历程" scheme="https://blogs.kainy.cn/categories/%E5%BF%83%E8%B7%AF%E5%8E%86%E7%A8%8B/"/>
+    
+    
+      <category term="相处" scheme="https://blogs.kainy.cn/tags/%E7%9B%B8%E5%A4%84/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>快站项目开发小结</title>
+    <link href="https://blogs.kainy.cn/2019/12/%E5%BF%AB%E7%AB%99/"/>
+    <id>https://blogs.kainy.cn/2019/12/快站/</id>
+    <published>2019-12-02T22:20:16.000Z</published>
+    <updated>2021-07-31T12:42:55.061Z</updated>
+    
+    <content type="html"><![CDATA[<p>快站是营销团队赋能业务团队快速搭建页面的内部工具。业务无需掌握技术，通过简单拖动和信息填写即可完成网页制作。</p><p>功能强大而又兼顾灵活性的页面制作平台，快站有许多精妙的设计和约定。这也给开发入门带来了一定挑战，如果不能从全局理解它的运作过程，就容易陷入盲人摸象的境地。这里根据自己开发两个组件的经历和理解做简单梳理，如有不对还请斧正。</p><p>从整体结构看，项目主要有两部分组成：admin和freemarker——admin也叫编辑器，面向页面制作者（生产者，后台，对内），用来在PC端拼出页面；freemarker面向页面的访问者（消费者，前台，对外），一般在客户端打开。开发一个组件，一般要同时开发两个部分。</p><p>从技术选型看，admin部分使用vue技术栈，freemarker部分使用freemarker模板引擎和vue。<br><a id="more"></a></p><p>开发一个组件，最重要了解的是编辑器（editor）部分。也是这里着重介绍的部分。组件分为基础组件、业务组件和组合组件。灵活度依次递减、复杂度递增。</p><h2 id="admin部分"><a href="#admin部分" class="headerlink" title="admin部分"></a>admin部分</h2><p><img src="https://wx2.sinaimg.cn/large/4d6e3e3bly1g549f6zbmrj20vl0qddja.jpg" alt="的界面结构截图" style="width:50%;"></p><p>从左侧组件面板选择组件拖入中间的编辑面板，就在页面中增加一个组件。点击选中组件，右边的属性面板就会出现该组件可以设置的所有属性。</p><h3 id="组件（widget）"><a href="#组件（widget）" class="headerlink" title="组件（widget）"></a>组件（widget）</h3><p>每个组件对应 \admin\src\pages\editor\widgets 下的一个目录，里面包含组件的所有代码，是组件开发的主战场。快站已经帮我们实现了大量共用功能，把特定部分抽离出来，独立成组件的形式，这样通过简单的配置和业务逻辑代码编写，就可以完成对组件功能的描述。但这同时也是大量约定和隐喻的开始… </p><p>最常见的组件由init.js、index.vue和validate.js文件组成，</p><ul><li>init.js 描述组件有哪些属性字段、和默认值（右侧属性面板）</li><li>index.vue 描述组件的结构，可视化效果（中间的编辑面板）</li><li>validate.js 定义格式校验规则</li></ul><p>admin中实时预览的实现，是通过右边属性面板调节config中各属性字段的值，驱动编辑面板的视图改变，可见init.js是很重要的一环，它连接了数据和视图。</p><p>本想把init.js配置文件的字段意义整理成文档，但目前数据结构变动还比较大，所以只梳理关键字段：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  name: <span class="string">'base-qrcode'</span>, <span class="comment">// 组件英文名</span></span><br><span class="line">  label: <span class="string">'二维码'</span>, <span class="comment">// 组件中文名</span></span><br><span class="line">  _currentTab: <span class="string">'样式'</span>, <span class="comment">// 属性面板一级tab的默认选中项</span></span><br><span class="line">  config: &#123;</span><br><span class="line">    ruleId,</span><br><span class="line">    qrcode: &#123; <span class="comment">// 属性名称</span></span><br><span class="line">      tab: <span class="string">'样式'</span>, <span class="comment">// 属性面板二级tab的默认选中项</span></span><br><span class="line">      group: <span class="string">'是否启用动态二维码'</span>, <span class="comment">// tab分组</span></span><br><span class="line">      type: <span class="string">'qrcode'</span>,  <span class="comment">// * 组件类型</span></span><br><span class="line">      value: &#123; <span class="comment">// 属性值</span></span><br><span class="line">        dynamic: <span class="string">'0'</span>,</span><br><span class="line">        link: <span class="string">''</span>,</span><br><span class="line">        linkAPI: <span class="string">''</span>,</span><br><span class="line">        useLocationHref: <span class="string">'1'</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>除了暴露默认的配置对象外，init.js 还暴露<code>dependence</code>用于描述组件依赖，和<code>rules</code>用于描述简单的（非空、格式校验）校验规则，更为复杂的（业务逻辑相关）自定义校验，则可以在validate.js中暴露的<code>validator</code>方法来定义。</p><h3 id="属性单元（type）"><a href="#属性单元（type）" class="headerlink" title="属性单元（type）"></a>属性单元（type）</h3><p><img src="https://wx2.sinaimg.cn/large/4d6e3e3bly1g549giux9aj20s30oygol.jpg" alt="快站types" style="width:50%;"></p><p>type是设置属性值的最小单元，比如颜色选择器、数值选择器，如果这些基础的type无法满足要求，比如有联动的属性，也可以自定义type。文件目录在 admin\src\pages\editor\types </p><p>从某种意义上可以将属性控制单元（types）视作controler，组件目录内的init.js视作model、index.vue视作view。</p><p>使用admin通过组件拼装好页面后，将各个组件的config放入数组，保存数据库中，后续可以返回给admin继续编辑，或者供freemarker渲染页面。</p><h2 id="freemarker部分"><a href="#freemarker部分" class="headerlink" title="freemarker部分"></a>freemarker部分</h2><p>Freemarker是一个java模板引擎，快站用它来实现服务端页面渲染。更合适的方案可能是VUE的SSR模块，但由于目前服务端还没使用NodeJS，这部分工作还是由后端完成。</p><p>这部分的约定主要是*.pure.(html|js|css)的文件，是不含freemarker语法，可以压缩的，所以出于性能优化和语法高亮考虑，应该考虑尽量把代码写到pure文件中。</p><h2 id="案例展示"><a href="#案例展示" class="headerlink" title="案例展示"></a>案例展示</h2><p>截止目前，快站已经输出许多活动页面，感兴趣可以通过 <a href="https://b.pingan.com.cn/mkt/youhui/1905/rmhd/index.shtml" target="_blank" rel="external nofollow noopener noreferrer">热门活动查看</a> ，其中URL以 <a href="https://b.pingan.com.cn/kuaizhan" rel="external nofollow noopener noreferrer" target="_blank">https://b.pingan.com.cn/kuaizhan</a> 开头的页面，由快站制作。</p><div><hr><strong>为您推荐</strong><ul><li><a href="https://blogs.kainy.cn/2013/06/通行证项目前端开发小结/">通行证项目前端开发小结</a></li><li><a href="https://blogs.kainy.cn/2013/03/愚人节专题项目前端开发小结/">愚人节专题项目前端开发小结</a></li><li><a href="https://blogs.kainy.cn/2013/04/拾贝电台开源了/">拾贝电台开源了</a></li></ul></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;快站是营销团队赋能业务团队快速搭建页面的内部工具。业务无需掌握技术，通过简单拖动和信息填写即可完成网页制作。&lt;/p&gt;
+&lt;p&gt;功能强大而又兼顾灵活性的页面制作平台，快站有许多精妙的设计和约定。这也给开发入门带来了一定挑战，如果不能从全局理解它的运作过程，就容易陷入盲人摸象的境地。这里根据自己开发两个组件的经历和理解做简单梳理，如有不对还请斧正。&lt;/p&gt;
+&lt;p&gt;从整体结构看，项目主要有两部分组成：admin和freemarker——admin也叫编辑器，面向页面制作者（生产者，后台，对内），用来在PC端拼出页面；freemarker面向页面的访问者（消费者，前台，对外），一般在客户端打开。开发一个组件，一般要同时开发两个部分。&lt;/p&gt;
+&lt;p&gt;从技术选型看，admin部分使用vue技术栈，freemarker部分使用freemarker模板引擎和vue。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://blogs.kainy.cn/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+      <category term="建站❤编程" scheme="https://blogs.kainy.cn/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E5%BB%BA%E7%AB%99%E2%9D%A4%E7%BC%96%E7%A8%8B/"/>
+    
+    
+      <category term="快站" scheme="https://blogs.kainy.cn/tags/%E5%BF%AB%E7%AB%99/"/>
+    
+      <category term="项目" scheme="https://blogs.kainy.cn/tags/%E9%A1%B9%E7%9B%AE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>合成海报的小程序插件</title>
+    <link href="https://blogs.kainy.cn/2019/11/191119%E8%A3%82%E5%8F%98%E8%90%A5%E9%94%80%E6%B5%B7%E6%8A%A5%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8F%92%E4%BB%B6/"/>
+    <id>https://blogs.kainy.cn/2019/11/191119裂变营销海报小程序插件/</id>
+    <published>2019-11-19T11:50:35.000Z</published>
+    <updated>2021-07-31T12:42:55.039Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p><strong>票圈海报</strong> 是一个用于生成海报的小程序插件，通过灵活简单的配置(JSON)就可以生成精美的分享海报，适用于小程序的朋友圈分享等营销裂变场景。</p><p>可以绘制文字、图片、线条、色块到海报画布，支持设置宽高、透明度、层级甚至圆角等属性。</p><h2 id="亮点"><a href="#亮点" class="headerlink" title="亮点"></a>亮点</h2><ol><li>已上架到微信服务平台，一键接入，即插即用</li><li>提供异步调用方法，支持获取用户头像后合成海报的场景</li><li>无需设置图片downloadFile合法域名，再也不用担心 “downloadFile: fail url not in domain list” 问题</li><li>自带保存海报UI（开关参数：config.showSavePopup）</li></ol><a id="more"></a><h1 id="更新历史"><a href="#更新历史" class="headerlink" title="更新历史"></a>更新历史</h1><h2 id="1-0-13"><a href="#1-0-13" class="headerlink" title="1.0.13"></a>1.0.13</h2><p> 支持配置用户头像和昵称 ,直接由插件调用用户信息功能页获取</p><h2 id="1-0-12"><a href="#1-0-12" class="headerlink" title="1.0.12"></a>1.0.12</h2><p> 内置 预览／保存 海报的弹层UI</p><h2 id="1-0-7"><a href="#1-0-7" class="headerlink" title="1.0.7"></a>1.0.7</h2><p> 非合法域名图片使用代理下载</p><h2 id="1-0-5"><a href="#1-0-5" class="headerlink" title="1.0.5"></a>1.0.5</h2><p>  支持异步调用</p><h1 id="生成效果"><a href="#生成效果" class="headerlink" title="生成效果"></a>生成效果</h1><p><img src="https://wx1.sinaimg.cn/large/4d6e3e3bly1g93djbm341j20bi0m0dr4.jpg" alt="wxa-plugin-canvas预览截图" style="width: 400px;    border: solid gray 1px;    border-radius: 5px;"></p><h1 id="快速预览"><a href="#快速预览" class="headerlink" title="快速预览"></a>快速预览</h1><p>点击 <a href="https://developers.weixin.qq.com/s/0QHokdmh7xqX" rel="external nofollow noopener noreferrer" target="_blank">导入代码片段</a> 即可在微信开发者工具中运行和预览。需注意，由于引用插件，需要先申请接入权限，快速预览可填写 AppID： <code>wx8a6f7c4b3d410554</code>，确认适合自己后再发起插件接入申请。</p><p>小技巧：首次导入代码段，会在小程序开发者工具的 console 中看到 “插件未授权使用”的提示，只要点击右边“添加插件”按钮即可申请添加，秒通过。</p><h1 id="接入指引"><a href="#接入指引" class="headerlink" title="接入指引"></a>接入指引</h1><h2 id="1、插件申请接入："><a href="#1、插件申请接入：" class="headerlink" title="1、插件申请接入："></a>1、插件申请接入：</h2><p>在微信公众平台中， “微信小程序官方后台-设置-第三方服务-插件管理” 里点击 “添加插件”，搜索 “<strong>票圈海报</strong>” ，申请通过后，小程序开发者可在小程序内使用该插件。</p><h2 id="2、引入插件包："><a href="#2、引入插件包：" class="headerlink" title="2、引入插件包："></a>2、引入插件包：</h2><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// app.json</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"plugins"</span>: &#123;</span><br><span class="line">    <span class="attr">"poster"</span>: &#123;</span><br><span class="line">      <span class="attr">"version"</span>: <span class="string">"1.0.7"</span>,</span><br><span class="line">      <span class="attr">"provider"</span>: <span class="string">"wx8a6f7c4b3d410554"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="3、使用插件："><a href="#3、使用插件：" class="headerlink" title="3、使用插件："></a>3、使用插件：</h2><p>小程序插件通过组件的 bind:success、bind:fail 属性 对外暴露回调方法，通过 config 属性接收插件配置对象。</p><p>在使用插件的页面(假设为 index )，引入插件</p><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.json</span></span><br><span class="line">"usingComponents": &#123;</span><br><span class="line">    "poster": "plugin://poster/poster"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- index.html --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">poster</span> <span class="attr">id</span>=<span class="string">"poster"</span> <span class="attr">config</span>=<span class="string">"&#123;&#123;posterConfig&#125;&#125;"</span> <span class="attr">bind:success</span>=<span class="string">"onPosterSuccess"</span> <span class="attr">bind:fail</span>=<span class="string">"onPosterFail"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span>&gt;</span>点击生成海报<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">poster</span>&gt;</span></span><br></pre></td></tr></table></figure><p>除此之外，可以通过 <code>onCreate</code> API，异步调用海报合成方法，详见文末 异步生成海报 部分</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.selectComponent(<span class="string">'#poster'</span>).onCreate(<span class="literal">true</span>)</span><br></pre></td></tr></table></figure><h1 id="使用注意事项"><a href="#使用注意事项" class="headerlink" title="使用注意事项"></a><del>使用注意事项</del></h1><ol><li><del>图片的域名<strong>务必</strong>添加到downloadFile合法域名中（开发设置-服务器域名-downloadFile合法域名）</del> 「插件已处理跨域问题」，warming信息可忽略。</li></ol><h1 id="组件参数解释"><a href="#组件参数解释" class="headerlink" title="组件参数解释"></a>组件参数解释</h1><h2 id="config字段"><a href="#config字段" class="headerlink" title="config字段"></a>config字段</h2><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>描述</th></tr></thead><tbody><tr><td>showSavePopup</td><td>Boolean</td><td>否</td><td>是否展示保存海报弹窗，默认 false</td></tr><tr><td>width</td><td>Number(单位:rpx)</td><td>是</td><td>画布宽度</td></tr><tr><td>height</td><td>Number(单位:rpx)</td><td>是</td><td>画布高度</td></tr><tr><td>backgroundColor</td><td>String</td><td>否</td><td>画布颜色</td></tr><tr><td>debug</td><td>Boolean</td><td>否</td><td>false隐藏canvas，true显示canvas，默认false</td></tr><tr><td>pixelRatio</td><td>Number</td><td>否</td><td>1为一般，值越大越清晰</td></tr><tr><td>preload</td><td>Boolean</td><td>否</td><td>true：图片资源预下载 默认false</td></tr><tr><td>hide-loading</td><td>Boolean</td><td>否</td><td>true：隐藏loading 默认false</td></tr><tr><td>blocks</td><td>Object Array（对象数组）</td><td>否</td><td>看下文</td></tr><tr><td>texts</td><td>Object Array（对象数组）</td><td>否</td><td>看下文</td></tr><tr><td>images</td><td>Object Array（对象数组）</td><td>否</td><td>看下文</td></tr><tr><td>lines</td><td>Object Array（对象数组）</td><td>否</td><td>看下文</td></tr></tbody></table><h2 id="blocks字段"><a href="#blocks字段" class="headerlink" title="blocks字段"></a>blocks字段</h2><table><thead><tr><th>字段名</th><th>类型</th><th>必填</th><th>描述</th></tr></thead><tbody><tr><td>x</td><td>Number(单位:rpx)</td><td>是</td><td>块的坐标</td></tr><tr><td>y</td><td>Number(单位:rpx)</td><td>是</td><td>块的坐标</td></tr><tr><td>width</td><td>Number(单位:rpx)</td><td>否</td><td>如果内部有文字，由文字宽度和内边距决定</td></tr><tr><td>height</td><td>Number(单位:rpx)</td><td>是</td><td></td></tr><tr><td>paddingLeft</td><td>Number(单位:rpx)</td><td>否</td><td>内左边距</td></tr><tr><td>paddingRight</td><td>Number(单位:rpx)</td><td>否</td><td>内右边距</td></tr><tr><td>borderWidth</td><td>Number(单位:rpx)</td><td>否</td><td>边框宽度</td></tr><tr><td>borderColor</td><td>String</td><td>否</td><td>边框颜色</td></tr><tr><td>backgroundColor</td><td>String</td><td>否</td><td>背景颜色</td></tr><tr><td>borderRadius</td><td>Number(单位:rpx)</td><td>否</td><td>圆角</td></tr><tr><td>text</td><td>Object</td><td>否</td><td>块里面可以填充文字，参考texts字段解释</td></tr><tr><td>zIndex</td><td>Int</td><td>否</td><td>层级，越大越高</td></tr></tbody></table><h2 id="texts字段"><a href="#texts字段" class="headerlink" title="texts字段"></a>texts字段</h2><table><thead><tr><th>字段名</th><th>类型</th><th>必填</th><th>描述</th></tr></thead><tbody><tr><td>x</td><td>Number(单位:rpx)</td><td>是</td><td>坐标</td></tr><tr><td>y</td><td>Number(单位:rpx)</td><td>是</td><td>坐标</td></tr><tr><td>text</td><td>String｜Object</td><td>是</td><td>当Object类型时，参数为text字段的参数，marginLeft、marginRight这两个字段可用（示例请看下文）</td></tr><tr><td>fontSize</td><td>Number(单位:rpx)</td><td>是</td><td>文字大小</td></tr><tr><td>color</td><td>String</td><td>否</td><td>颜色</td></tr><tr><td>opacity</td><td>Int</td><td>否</td><td>1为不透明，0为透明</td></tr><tr><td>lineHeight</td><td>Number(单位:rpx)</td><td>否</td><td>行高</td></tr><tr><td>lineNum</td><td>Int</td><td>否</td><td>根据宽度换行，最多的行数</td></tr><tr><td>width</td><td>Number(单位:rpx)</td><td>否</td><td>没有指定为画布宽度</td></tr><tr><td>marginLeft</td><td>Number(单位:rpx)</td><td>否</td><td>当text字段为Object可以使用，用来控制多行文字间距</td></tr><tr><td>marginRight</td><td>Number(单位:rpx)</td><td>否</td><td>当text字段为Object可以使用，用来控制多行文字间距</td></tr><tr><td>textDecoration</td><td>String</td><td>否</td><td>目前只支持 line-through（贯穿线），默认为none</td></tr><tr><td>baseLine</td><td>String</td><td>否</td><td>top｜ middle｜bottom基线对齐方式</td></tr><tr><td>textAlign</td><td>String</td><td>否</td><td>left｜center｜right对齐方式</td></tr><tr><td>zIndex</td><td>Int</td><td>否</td><td>层级，越大越高</td></tr><tr><td>fontFamily</td><td>String</td><td>否</td><td>小程序默认字体为’sans-serif’, 请输入小程序支持的字体，例如：’STSong’</td></tr><tr><td>fontWeight</td><td>String</td><td>否</td><td>‘bold’加粗字体，目前小程序不支持 100 - 900 加粗</td></tr><tr><td>fontStyle</td><td>String</td><td>否</td><td>‘italic’倾斜字体</td></tr></tbody></table><h2 id="images字段"><a href="#images字段" class="headerlink" title="images字段"></a>images字段</h2><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>描述</th></tr></thead><tbody><tr><td>x</td><td>Number(单位:rpx)</td><td>是</td><td>右上角的坐标</td></tr><tr><td>y</td><td>Number(单位:rpx)</td><td>是</td><td>右上角的坐标</td></tr><tr><td>url</td><td>String</td><td>是</td><td>图片url（<strong>需要添加到下载白名单域名中</strong>）也支持本地图片</td></tr><tr><td>width</td><td>Number(单位:rpx)</td><td>是</td><td>宽度（<strong>会根据图片的尺寸同比例缩放</strong>）</td></tr><tr><td>height</td><td>Number(单位:rpx)</td><td>是</td><td>高度（<strong>会根据图片的尺寸同比例缩放</strong>）</td></tr><tr><td>borderRadius</td><td>Number(单位:rpx)</td><td>否</td><td>圆角，跟css一样</td></tr><tr><td>borderWidth</td><td>Number(单位:rpx)</td><td>否</td><td>边框宽度</td></tr><tr><td>borderColor</td><td>String</td><td>否</td><td>边框颜色</td></tr><tr><td>zIndex</td><td>Int</td><td>否</td><td>层级，越大越高</td></tr></tbody></table><h2 id="lines字段"><a href="#lines字段" class="headerlink" title="lines字段"></a>lines字段</h2><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>描述</th></tr></thead><tbody><tr><td>startX</td><td>Number(单位:rpx)</td><td>是</td><td>起始坐标</td></tr><tr><td>startY</td><td>Number(单位:rpx)</td><td>是</td><td>起始坐标</td></tr><tr><td>endX</td><td>Number(单位:rpx)</td><td>是</td><td>终结坐标</td></tr><tr><td>endY</td><td>Number(单位:rpx)</td><td>是</td><td>终结坐标</td></tr><tr><td>width</td><td>Number(单位:rpx)</td><td>是</td><td>线的宽度</td></tr><tr><td>color</td><td>String</td><td>否</td><td>线的颜色</td></tr><tr><td>zIndex</td><td>Int</td><td>否</td><td>层级，越大越高</td></tr></tbody></table><h2 id="userinfo字段"><a href="#userinfo字段" class="headerlink" title="userinfo字段"></a>userinfo字段</h2><p>配置该项后，用户点击生成海报时，会先通过用户信息功能页授权获取用户信息，绘制海报时可直接使用用户头像和昵称。</p><h3 id="userinfo-avatar"><a href="#userinfo-avatar" class="headerlink" title="userinfo.avatar"></a>userinfo.avatar</h3><p>可以把它看作特殊的 images 配置，url 属性值为用户头像，其他属性和 images 无异</p><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>描述</th></tr></thead><tbody><tr><td>x</td><td>Number(单位:rpx)</td><td>是</td><td>右上角的坐标</td></tr><tr><td>y</td><td>Number(单位:rpx)</td><td>是</td><td>右上角的坐标</td></tr><tr><td>width</td><td>Number(单位:rpx)</td><td>是</td><td>宽度（<strong>会根据图片的尺寸同比例缩放</strong>）</td></tr><tr><td>height</td><td>Number(单位:rpx)</td><td>是</td><td>高度（<strong>会根据图片的尺寸同比例缩放</strong>）</td></tr><tr><td>borderRadius</td><td>Number(单位:rpx)</td><td>否</td><td>圆角，跟css一样</td></tr></tbody></table><h3 id="userinfo-nickname"><a href="#userinfo-nickname" class="headerlink" title="userinfo.nickname"></a>userinfo.nickname</h3><p>可以把它看作特殊的 texts 配置，text 属性值为用户昵称，其他属性和 texts 无异</p><table><thead><tr><th>字段名</th><th>类型</th><th>必填</th><th>描述</th></tr></thead><tbody><tr><td>x</td><td>Number(单位:rpx)</td><td>是</td><td>坐标</td></tr><tr><td>y</td><td>Number(单位:rpx)</td><td>是</td><td>坐标</td></tr><tr><td>color</td><td>String</td><td>否</td><td>颜色</td></tr><tr><td>width</td><td>Number(单位:rpx)</td><td>否</td><td>没有指定为画布宽度</td></tr><tr><td>textAlign</td><td>String</td><td>否</td><td>left｜center｜right对齐方式</td></tr></tbody></table><h1 id="事件绑定"><a href="#事件绑定" class="headerlink" title="事件绑定"></a>事件绑定</h1><p>以代码段为例</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">poster</span> <span class="attr">id</span>=<span class="string">"poster"</span> <span class="attr">config</span>=<span class="string">"&#123;&#123;posterConfig&#125;&#125;"</span> <span class="attr">bind:success</span>=<span class="string">"onPosterSuccess"</span> <span class="attr">hide-loading</span>=<span class="string">"&#123;&#123;false&#125;&#125;"</span> <span class="attr">bind:fail</span>=<span class="string">"onPosterFail"</span> <span class="attr">bind:savePopShowChange</span>=<span class="string">"popChange"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">style</span>=<span class="string">"margin:40rpx;"</span>&gt;</span>点击生成海报(缓存|同步)<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">poster</span>&gt;</span></span><br></pre></td></tr></table></figure><h2 id="成功回调-success"><a href="#成功回调-success" class="headerlink" title="成功回调 success"></a>成功回调 success</h2><p>返回 { detail }, detail 为生成海报图片的本地 url，可以使用<code>wx.previewImage</code>预览海报，如下</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">onPosterSuccess(e) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; detail &#125; = e;</span><br><span class="line">  wx.previewImage(&#123;</span><br><span class="line">      current: detail,</span><br><span class="line">      urls: [detail]</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="失败回调-fail"><a href="#失败回调-fail" class="headerlink" title="失败回调 fail"></a>失败回调 fail</h2><p>返回{ detail }, detail 为错误信息</p><h2 id="保存弹层显隐切换回调-savePopShowChange"><a href="#保存弹层显隐切换回调-savePopShowChange" class="headerlink" title="保存弹层显隐切换回调 savePopShowChange"></a>保存弹层显隐切换回调 savePopShowChange</h2><p>如果选项设置了 <code>showSavePopup</code> 为 <code>true</code>，会在合成海报后，弹出保存海报的指引弹层。绑定 <code>savePopShowChange</code> 事件，可监听弹层显隐状态：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">onPosterSuccess(e) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; detail &#125; = e;</span><br><span class="line">  <span class="built_in">console</span>.log(detail) <span class="comment">// true or false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h1 id="异步生成海报"><a href="#异步生成海报" class="headerlink" title="异步生成海报"></a>异步生成海报</h1><p><em>从基础库版本 2.2.3 开始提供支持</em></p><p>有些场景可能需要发起 ajax 请求后才能获取生成海报的数据，这里提供了异步生成海报的方式。</p><p>只需要对组件的 <code>onCreate</code> 方法，如下调用就行了</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Page(&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 异步生成海报</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    asyncCreatePoster() &#123;</span><br><span class="line">    <span class="comment">// setData配置数据</span></span><br><span class="line">    <span class="keyword">this</span>.setData(&#123; <span class="attr">posterConfig</span>: &#123;...&#125; &#125;, () =&gt; &#123;</span><br><span class="line">        <span class="keyword">this</span>.selectComponent(<span class="string">'#poster'</span>).onCreate(<span class="literal">true</span>)</span><br><span class="line">    &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure><h1 id="问题反馈"><a href="#问题反馈" class="headerlink" title="问题反馈"></a>问题反馈</h1><p>有什么问题可以添加微信 <code>wesiri</code>，发消息“小程序”进讨论群。</p><div><hr><strong>为您推荐</strong><ul><li><a href="https://blogs.kainy.cn/2019/02/以webview为中心的小程序开发思考/">以webview为中心的小程序开发模式思考</a></li><li><a href="https://blogs.kainy.cn/2018/07/博客／资讯类网页在小程序中分享的方案/">小程序分享网页方案</a></li><li><a href="https://blogs.kainy.cn/2020/11/201116小程序插件数据统计/">小程序插件数据统计</a></li><li><a href="https://blogs.kainy.cn/2010/06/雷死人不偿命《走进光时代（by天翼群星）》/">雷死人不偿命《走进光时代（by天翼群星）》</a></li><li><a href="https://blogs.kainy.cn/2017/09/小程序页面“乱入”问题的解决办法/">小程序页面“被缓存”问题的解决方法</a></li><li><a href="https://blogs.kainy.cn/2010/01/周杰伦最新力作《刺陵》巨幅海报+剧情简介抢先看/">周杰伦最新力作《刺陵》巨幅海报+剧情简介抢先看</a></li></ul></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;票圈海报&lt;/strong&gt; 是一个用于生成海报的小程序插件，通过灵活简单的配置(JSON)就可以生成精美的分享海报，适用于小程序的朋友圈分享等营销裂变场景。&lt;/p&gt;
+&lt;p&gt;可以绘制文字、图片、线条、色块到海报画布，支持设置宽高、透明度、层级甚至圆角等属性。&lt;/p&gt;
+&lt;h2 id=&quot;亮点&quot;&gt;&lt;a href=&quot;#亮点&quot; class=&quot;headerlink&quot; title=&quot;亮点&quot;&gt;&lt;/a&gt;亮点&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;已上架到微信服务平台，一键接入，即插即用&lt;/li&gt;
+&lt;li&gt;提供异步调用方法，支持获取用户头像后合成海报的场景&lt;/li&gt;
+&lt;li&gt;无需设置图片downloadFile合法域名，再也不用担心 “downloadFile: fail url not in domain list” 问题&lt;/li&gt;
+&lt;li&gt;自带保存海报UI（开关参数：config.showSavePopup）&lt;/li&gt;
+&lt;/ol&gt;
+    
+    </summary>
+    
+      <category term="建站❤编程" scheme="https://blogs.kainy.cn/categories/%E5%BB%BA%E7%AB%99%E2%9D%A4%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="JavaScript" scheme="https://blogs.kainy.cn/categories/%E5%BB%BA%E7%AB%99%E2%9D%A4%E7%BC%96%E7%A8%8B/JavaScript/"/>
+    
+    
+      <category term="小程序" scheme="https://blogs.kainy.cn/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/"/>
+    
+      <category term="海报" scheme="https://blogs.kainy.cn/tags/%E6%B5%B7%E6%8A%A5/"/>
+    
+      <category term="营销" scheme="https://blogs.kainy.cn/tags/%E8%90%A5%E9%94%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>提升电桩使用率的思考和未来路面交通的展望</title>
+    <link href="https://blogs.kainy.cn/2019/08/190820%E6%8F%90%E5%8D%87%E7%94%B5%E6%A1%A9%E4%BD%BF%E7%94%A8%E7%8E%87%E7%9A%84%E6%80%9D%E8%80%83%E5%92%8C%E6%9C%AA%E6%9D%A5%E8%B7%AF%E9%9D%A2%E4%BA%A4%E9%80%9A%E7%9A%84%E5%B1%95%E6%9C%9B/"/>
+    <id>https://blogs.kainy.cn/2019/08/190820提升电桩使用率的思考和未来路面交通的展望/</id>
+    <published>2019-08-19T23:03:13.000Z</published>
+    <updated>2021-07-31T12:42:55.039Z</updated>
+    
+    <content type="html"><![CDATA[<p>针对<a href="/2019/06/190627AionS/#头一回上高速（20190817）">入手AionS后遇到的充电难问题</a>，个人觉得可以从两方面入手解决：</p><h3 id="油车占充电车位"><a href="#油车占充电车位" class="headerlink" title="油车占充电车位"></a>油车占充电车位</h3><p>这并不是一个新问题，可以通过车牌号，向物业或者交管局反应，让他们通知车主挪车。</p><h3 id="充满电的车占位"><a href="#充满电的车占位" class="headerlink" title="充满电的车占位"></a>充满电的车占位</h3><p>短期内可以通过调整计费方式解决。目前的计费方式是电费＋服务费，充电停止则两项都停止计费。只需稍作修改：拔枪后才停止服务费计费。车主为避免高额服务费，就会自觉地在充电完成后拔枪，枪拔了占车位也没意义，自然车位也腾了出来。</p><a id="more"></a><p>根本上解决充电桩使用效率问题，还是要从充电流程的标准化入手。比如结合立体停车场——车场有许多类似集装箱的容器，容器作为连接车与车场的中介。电车车主把车停入容器后，接上充电枪后离场。容器进入充电列队，按顺序放入带充电功能的卡槽，充电完成后移出，放到普通卡槽，普通卡槽停放的是普通油车和无需充电的电动车。</p><p>方案一只需要软件升级，实施成本低，但是面临停车场负荷的瓶颈——如果停车场车位的建设跟不上停车数量增长，这个方案采用的加价手段也就失效了，比如充完电的时候，停车场停满了，车主拔枪但找不到别的车位又不打算立即离开这附近，就可能选择继续占用充电位。这种情况在目前的闹市区停车场已经十分常见。</p><p>方案二虽然实施成本高，却有更高的扩展性。只要“未来汽车保有量会增加，且电动车比例不会下降”的假设成立，就能够提高停车、充电成本和节约重复建设成本，所以我个人觉得这是长期来看更合理的方案。</p><h3 id="未来展望"><a href="#未来展望" class="headerlink" title="未来展望"></a>未来展望</h3><p>感觉未来不会存在私家车的概念，所有机车实现单车自动驾驶后，由一个交通系统统一调度。乘客只需付费获得使用权即可。</p><p>定价的差异，体现在车型和行驶优先权的不同——车型差异好理解，配置越好、越舒适的车型付费越高；行驶优先权体现在比如，并道时候的“拉链式“交替通行，如果优先权一样，就遵循”右边过一辆车，左边过一辆车，然后右边再过一辆车，反反复复，有序行进“的规则，若遇到优先级高的，则优先级高的按一定概率，先通行。</p><p>无产权取代私有产权，可以降低车辆的持有成本，提高使用率。</p><div><hr><strong>为您推荐</strong><ul><li><a href="https://blogs.kainy.cn/2019/06/190627AionS/">广汽AionS笔记（持续更新）</a></li><li><a href="https://blogs.kainy.cn/2010/01/驾照考试（科目二）经验总结/">驾照考试（科目二）经验总结</a></li><li><a href="https://blogs.kainy.cn/2010/02/司机必看：46条保命驾驶技巧/">司机必看：46条保命驾驶技巧</a></li><li><a href="https://blogs.kainy.cn/2010/12/社会化交通导航–Waze_初体验/">社会化交通导航–Waze 初体验</a></li></ul></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;针对&lt;a href=&quot;/2019/06/190627AionS/#头一回上高速（20190817）&quot;&gt;入手AionS后遇到的充电难问题&lt;/a&gt;，个人觉得可以从两方面入手解决：&lt;/p&gt;
+&lt;h3 id=&quot;油车占充电车位&quot;&gt;&lt;a href=&quot;#油车占充电车位&quot; class=&quot;headerlink&quot; title=&quot;油车占充电车位&quot;&gt;&lt;/a&gt;油车占充电车位&lt;/h3&gt;&lt;p&gt;这并不是一个新问题，可以通过车牌号，向物业或者交管局反应，让他们通知车主挪车。&lt;/p&gt;
+&lt;h3 id=&quot;充满电的车占位&quot;&gt;&lt;a href=&quot;#充满电的车占位&quot; class=&quot;headerlink&quot; title=&quot;充满电的车占位&quot;&gt;&lt;/a&gt;充满电的车占位&lt;/h3&gt;&lt;p&gt;短期内可以通过调整计费方式解决。目前的计费方式是电费＋服务费，充电停止则两项都停止计费。只需稍作修改：拔枪后才停止服务费计费。车主为避免高额服务费，就会自觉地在充电完成后拔枪，枪拔了占车位也没意义，自然车位也腾了出来。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="东写西读" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/"/>
+    
+    
+      <category term="电桩" scheme="https://blogs.kainy.cn/tags/%E7%94%B5%E6%A1%A9/"/>
+    
+      <category term="交通" scheme="https://blogs.kainy.cn/tags/%E4%BA%A4%E9%80%9A/"/>
+    
+      <category term="汽车" scheme="https://blogs.kainy.cn/tags/%E6%B1%BD%E8%BD%A6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>不要和女人吵架[认真脸]</title>
+    <link href="https://blogs.kainy.cn/2019/08/190809%E4%B8%8D%E8%A6%81%E5%92%8C%E5%A5%B3%E4%BA%BA%E5%90%B5%E6%9E%B6%5B%E8%AE%A4%E7%9C%9F%E8%84%B8%5D/"/>
+    <id>https://blogs.kainy.cn/2019/08/190809不要和女人吵架[认真脸]/</id>
+    <published>2019-08-09T10:50:35.000Z</published>
+    <updated>2021-07-31T12:42:55.039Z</updated>
+    
+    <content type="html"><![CDATA[<p>两个人相处，难免有摩擦。依个人经验：和女人吵架是很不明智的，原因有俩：</p><h2 id="理亏"><a href="#理亏" class="headerlink" title="理亏"></a>理亏</h2><p>我们知道吵赢一场架，最基本的武器就是论据，但——</p><p>任何理由，当你用它提出诉求时，无论论据多么逻辑严谨、多么政治正确，女人们都可以用一句 “你是男人么？就不能大度一点？” 回得你思考人生。</p><p>而反过来，当你有一丝不顺遂她心意的举动，则会有一百句类似“对我不上心”、”不细心“、”不体贴“在前面侯着你。理由就是“这还需要理由？”</p><a id="more"></a><p>不信我们试着拿公理如：常识（<code>未婚先孕是不道德的</code>）、好习惯（<code>早睡早起</code>/<code>坚持锻炼</code>/<code>不滥情</code>/<code>睡前互道晚安</code>）、名言警句（<code>不以结婚为目的的恋爱都是耍流氓</code>）来举例。如果男人要求女人，就是“不够大度”；反过来，当男人偶尔放飞自我，有违公理，那是不是就“不细心/不体贴/不负责任/直男癌/渣男”了？</p><p>所以无论从理论上，还是先烈们血的教训都告诉男同胞们：吵架的时候千万别找理，因为操起的家伙注定是刀刃朝你而刀柄向着女人。</p><h2 id="不讨好"><a href="#不讨好" class="headerlink" title="不讨好"></a>不讨好</h2><p>回想一下吵架原由，如果原因在自己，自知理亏，那么基于上述（原因一），就应该知道决无可能通过吵架实现翻盘。</p><p>而据我观察，即便是以女人为导火索的吵架，往往结局也是共吞苦果。拿自己的经历来举例，一次因为被女票删了聊天记录而发火，大吵一架。最终，作为惩罚和防范措施，我把手机密码改了，结果女票立马也改了自己手机的密码——在我并无过错的情况下😅，后面几经不便，女票提出互相改回老密码，我开玩笑地提出“也好，那就罚你先我三天设回密码吧”，结果被秒拒…… 所以说，即便自己无过，要想通过吵架从女人那讨得哪怕一点点好处，都是木有可能滴。。</p><p>男女之间但吵架，无论是谁之过，男人能讨得最大的好就是共吞苦果。如果你不想不讨好地承担苦果，也就只能：</p><ul><li><p>在自己错的情况下好好讨好对方</p></li><li><p>对方错的时候“打掉牙齿和血吞”</p></li></ul><h2 id="“那么男人究竟该如何向女人表达合理诉求呢？”"><a href="#“那么男人究竟该如何向女人表达合理诉求呢？”" class="headerlink" title="“那么男人究竟该如何向女人表达合理诉求呢？”"></a>“那么男人究竟该如何向女人表达合理诉求呢？”</h2><p>Good question，但俺也还没想明白…</p><p>这里提供的是“不要吃屎”的建议，至于要吃什么，要怎么和女人表达诉求争取权益，还得广大男同胞一起摸索啦（欢迎在留言处讨论）。我暂时也还没有多少自认为好的建议。</p><p>反正据我的观察和实践，每次和女友吵架，无论起因过程结局如何，最后总是自己吃亏。所以结论就是无论无条件避免和女人吵架。</p><p>当然，前提是你在意的女人，如果不在意，或许还有翻盘机会哟～</p><div><hr><strong>为您推荐</strong><ul><li><a href="https://blogs.kainy.cn/2010/07/男孩女孩的那点心思/">男孩女孩的那点心思</a></li></ul></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;两个人相处，难免有摩擦。依个人经验：和女人吵架是很不明智的，原因有俩：&lt;/p&gt;
+&lt;h2 id=&quot;理亏&quot;&gt;&lt;a href=&quot;#理亏&quot; class=&quot;headerlink&quot; title=&quot;理亏&quot;&gt;&lt;/a&gt;理亏&lt;/h2&gt;&lt;p&gt;我们知道吵赢一场架，最基本的武器就是论据，但——&lt;/p&gt;
+&lt;p&gt;任何理由，当你用它提出诉求时，无论论据多么逻辑严谨、多么政治正确，女人们都可以用一句 “你是男人么？就不能大度一点？” 回得你思考人生。&lt;/p&gt;
+&lt;p&gt;而反过来，当你有一丝不顺遂她心意的举动，则会有一百句类似“对我不上心”、”不细心“、”不体贴“在前面侯着你。理由就是“这还需要理由？”&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="东写西读" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/"/>
+    
+      <category term="心路历程" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/%E5%BF%83%E8%B7%AF%E5%8E%86%E7%A8%8B/"/>
+    
+    
+      <category term="吵架" scheme="https://blogs.kainy.cn/tags/%E5%90%B5%E6%9E%B6/"/>
+    
+      <category term="女人" scheme="https://blogs.kainy.cn/tags/%E5%A5%B3%E4%BA%BA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>提车风波</title>
+    <link href="https://blogs.kainy.cn/2019/08/190801%E6%8F%90%E8%BD%A6%E9%A3%8E%E6%B3%A2/"/>
+    <id>https://blogs.kainy.cn/2019/08/190801提车风波/</id>
+    <published>2019-08-01T11:03:13.000Z</published>
+    <updated>2021-07-31T12:42:55.039Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="/2019/06/190627AionS/#通知提车了（20190718）" target>AionS提车</a>后，就要注册上牌了。在车管所服务站的指引下，来到距离最近的罗湖国税局，办理购置税。</p><p>到二楼车购税窗口咨询，得知需要现场取号，结果取号的人说今天的号发完了… 这才不到三点钟时间。而且三个窗口也就一个有人在办业务。这号都放到哪去了呢？对方说“不清楚，找服务台”。最后找到“科长”，带到二楼，了解到就是那一个在办理业务的人（车行），占用了一百多个号😱，感情这三个窗口里的工作人员都围着“一天几百万”的哥们转呐。面对我提出放号方式合理性质疑，“科长”也只能建议明天早些来。问题再次升级后，才得以解决。</p><a id="more"></a><p> 看到厅堂四处悬挂、摆放的政务服务“一次办”的宣传物料，突然感到莫大讽刺——流程是优化到可以一次办理了，但让不让“一次办”，让哪些人“一次办”，决定权还是掌握在放号规则制定者手中，成为一种资源。我无意臆测这其中是否存在利益输送，但这种放号机制，体现的公职人员疏离办事群众而亲近个别代理机构的意图却是昭然若揭。正是这种不合理机制的存在，让各种代办业务赚的盆满钵满，纳税人向国家缴税还要多缴一份代办费，从某种意义上是不是一种向国家分权的行为呢？又是权力授予抑或权力攫取？</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;/2019/06/190627AionS/#通知提车了（20190718）&quot; target&gt;AionS提车&lt;/a&gt;后，就要注册上牌了。在车管所服务站的指引下，来到距离最近的罗湖国税局，办理购置税。&lt;/p&gt;
+&lt;p&gt;到二楼车购税窗口咨询，得知需要现场取号，结果取号的人说今天的号发完了… 这才不到三点钟时间。而且三个窗口也就一个有人在办业务。这号都放到哪去了呢？对方说“不清楚，找服务台”。最后找到“科长”，带到二楼，了解到就是那一个在办理业务的人（车行），占用了一百多个号😱，感情这三个窗口里的工作人员都围着“一天几百万”的哥们转呐。面对我提出放号方式合理性质疑，“科长”也只能建议明天早些来。问题再次升级后，才得以解决。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="东写西读" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/"/>
+    
+    
+      <category term="国税局" scheme="https://blogs.kainy.cn/tags/%E5%9B%BD%E7%A8%8E%E5%B1%80/"/>
+    
+      <category term="车购税" scheme="https://blogs.kainy.cn/tags/%E8%BD%A6%E8%B4%AD%E7%A8%8E/"/>
+    
+      <category term="提车" scheme="https://blogs.kainy.cn/tags/%E6%8F%90%E8%BD%A6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>不属于自己的东西</title>
+    <link href="https://blogs.kainy.cn/2019/07/190712%E4%B8%8D%E6%8B%BF%E4%B8%8D%E5%B1%9E%E4%BA%8E%E8%87%AA%E5%B7%B1%E7%9A%84%E4%B8%9C%E8%A5%BF/"/>
+    <id>https://blogs.kainy.cn/2019/07/190712不拿不属于自己的东西/</id>
+    <published>2019-07-13T23:03:13.000Z</published>
+    <updated>2021-07-31T12:42:55.039Z</updated>
+    
+    <content type="html"><![CDATA[<div id="hbe-security"> <div class="hbe-input-container"> <input type="password" class="hbe-form-control" id="pass" placeholder="点击这里，输入密码后按“回车”键" /> <label for="pass">点击这里，输入密码后按“回车”键</label> <div class="bottom-line"></div> </div> </div> <div id="decryptionError" style="display: none;">Incorrect Password!</div> <div id="noContentError" style="display: none;">No content to display!</div> <div id="encrypt-blog" style="display:none"> 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 </div><script src="/lib/crypto-js.js"></script><script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">]]></content>
+    
+    <summary type="html">
+    
+      该内容已加密，密码验证通过后才可访问。&lt;/br&gt;如有必要可&lt;a href=&quot;mailto:gt@kainy.cn?subject=%E5%92%A8%E8%AF%A2%E5%8D%9A%E6%96%87%E8%AE%BF%E9%97%AE%E5%AF%86%E7%A0%81%EF%BC%88%E8%87%AA%E6%88%91%E7%AE%80%E4%BB%8B%EF%BC%9A%20%EF%BC%9B%E7%BD%91%E9%A1%B5%E9%93%BE%E6%8E%A5%EF%BC%9A%20%EF%BC%9B%E8%AE%BF%E9%97%AE%E4%BA%8B%E7%94%B1%EF%BC%9A%20%EF%BC%9B%EF%BC%89&quot;&gt;尝试发送邮件&lt;/a&gt;咨询。&lt;/br&gt;
+    
+    </summary>
+    
+      <category term="东写西读" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/"/>
+    
+      <category term="心路历程" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/%E5%BF%83%E8%B7%AF%E5%8E%86%E7%A8%8B/"/>
+    
+    
+      <category term="心态" scheme="https://blogs.kainy.cn/tags/%E5%BF%83%E6%80%81/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>因为在乎所以珍贵</title>
+    <link href="https://blogs.kainy.cn/2019/07/190713%E5%9B%A0%E4%B8%BA%E5%9C%A8%E4%B9%8E%20%E6%89%80%E4%BB%A5%E7%8F%8D%E8%B4%B5/"/>
+    <id>https://blogs.kainy.cn/2019/07/190713因为在乎 所以珍贵/</id>
+    <published>2019-07-13T14:13:36.000Z</published>
+    <updated>2021-07-31T12:42:55.039Z</updated>
+    
+    <content type="html"><![CDATA[<div id="hbe-security"> <div class="hbe-input-container"> <input type="password" class="hbe-form-control" id="pass" placeholder="点击这里，输入密码后按“回车”键" /> <label for="pass">点击这里，输入密码后按“回车”键</label> <div class="bottom-line"></div> </div> </div> <div id="decryptionError" style="display: none;">Incorrect Password!</div> <div id="noContentError" style="display: none;">No content to display!</div> <div id="encrypt-blog" style="display:none"> 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 </div><script src="/lib/crypto-js.js"></script><script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">]]></content>
+    
+    <summary type="html">
+    
+      该内容已加密，密码验证通过后才可访问。&lt;/br&gt;如有必要可&lt;a href=&quot;mailto:gt@kainy.cn?subject=%E5%92%A8%E8%AF%A2%E5%8D%9A%E6%96%87%E8%AE%BF%E9%97%AE%E5%AF%86%E7%A0%81%EF%BC%88%E8%87%AA%E6%88%91%E7%AE%80%E4%BB%8B%EF%BC%9A%20%EF%BC%9B%E7%BD%91%E9%A1%B5%E9%93%BE%E6%8E%A5%EF%BC%9A%20%EF%BC%9B%E8%AE%BF%E9%97%AE%E4%BA%8B%E7%94%B1%EF%BC%9A%20%EF%BC%9B%EF%BC%89&quot;&gt;尝试发送邮件&lt;/a&gt;咨询。&lt;/br&gt;
+    
+    </summary>
+    
+      <category term="东写西读" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/"/>
+    
+      <category term="心路历程" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/%E5%BF%83%E8%B7%AF%E5%8E%86%E7%A8%8B/"/>
+    
+    
+      <category term="wyf" scheme="https://blogs.kainy.cn/tags/wyf/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>微海报2019上半年的改进</title>
+    <link href="https://blogs.kainy.cn/2019/07/%E5%BE%AE%E6%B5%B7%E6%8A%A52019%E6%94%B9%E8%BF%9B/"/>
+    <id>https://blogs.kainy.cn/2019/07/微海报2019改进/</id>
+    <published>2019-07-11T22:20:16.000Z</published>
+    <updated>2021-07-31T12:42:55.061Z</updated>
+    
+    <content type="html"><![CDATA[<p>上半年的改进主要在使用渠道扩展和数据统计两方面。</p><h2 id="渠道扩展"><a href="#渠道扩展" class="headerlink" title="渠道扩展"></a>渠道扩展</h2><p>改造后，微海报已经支持在微信、小程序中访问。</p><p>原先的宿主是平安银行 APP，依赖其图片文件保存到系统相册和分享功能。实际上海报合成这一主要流程是纯 H5 实现，并不依赖原生接口，所以改造工作量并不大——主要集中在分享操作的指引（如图）</p><a id="more"></a><p><img src="https://wx2.sinaimg.cn/large/4d6e3e3bly1g4ujg1iy0fj20ih0ihwlm.jpg" alt="微海报改版前后对比图" style="width:50%"></p><p>原先的结果页上，在小图预览下方有两个分享按钮，点击后调用原生的文件分享接口。而新的交互，由于运行在微信 webview 中，没有文件分享的接口，需要借助长按图片完成保存/分享操作。由于少了分享按钮，整个界面元素只有预览图，所以直接全平展示预览海报，然后蒙层提示“长按保存分享”（每天仅提示一次），考虑到结果页和全屏预览除了二维码部分十分相似，用户可能察觉不到区别，加了动画效果和小提示。</p><p>后续还会开放在企业微信、支付宝、钉钉和默认浏览器（短信推送）渠道到访问，以更好到发挥其获客作用。</p><p><img src="https://wx2.sinaimg.cn/large/4d6e3e3bly1g4x9va46mmj209u0a0746.jpg" alt="扫码体验微海报" style="width:30%"></p><h2 id="数据统计"><a href="#数据统计" class="headerlink" title="数据统计"></a>数据统计</h2><p>之前的基础埋点，统计出来的数据比较零散和抽象，无法直观体现转化率和走势等指标。我们结合 Gopher 平台提供的漏斗分析功能，对埋点进行梳理。改进后不仅可以查询到每张海报单位时间内的访问情况，还可以看到“浏览－合成－分享”整个流程中各个步骤的转化率，为交互改进效果的评估，和后续改进方案制定，提供数据支持。</p><p><img src="https://wx2.sinaimg.cn/large/4d6e3e3bly1g4xa8zvolwj20uk16bn7h.jpg" alt="Gopher 报表 for 微海报" style="width:50%"></p><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>上半年还实现了太阳码（小程序码）海报合成，结果页缩略图放大预览等优化需求，其中结果页缩略图放大预览需求的提出比较有意思：是我们在分析点击情况的时候，发现缩略图每天有不少点击量，于是推断用户点击缩略图因该是想要查看所分享海报的效果，比如上面的文案细节之类的。这是数据统计优化实现精细化运营后的第一个运用。</p><div><hr><strong>为您推荐</strong><ul><li><a href="https://blogs.kainy.cn/2018/02/180210微海报图片优化小结/">微海报离线优化小结</a></li><li><a href="https://blogs.kainy.cn/2018/12/微海报2018前端性能回顾/">微海报2018前端性能回顾</a></li><li><a href="https://blogs.kainy.cn/2018/06/小程序工程化开发之：重构稿转为wxml/">小程序工程化开发之：重构稿转为wxml</a></li></ul></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;上半年的改进主要在使用渠道扩展和数据统计两方面。&lt;/p&gt;
+&lt;h2 id=&quot;渠道扩展&quot;&gt;&lt;a href=&quot;#渠道扩展&quot; class=&quot;headerlink&quot; title=&quot;渠道扩展&quot;&gt;&lt;/a&gt;渠道扩展&lt;/h2&gt;&lt;p&gt;改造后，微海报已经支持在微信、小程序中访问。&lt;/p&gt;
+&lt;p&gt;原先的宿主是平安银行 APP，依赖其图片文件保存到系统相册和分享功能。实际上海报合成这一主要流程是纯 H5 实现，并不依赖原生接口，所以改造工作量并不大——主要集中在分享操作的指引（如图）&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://blogs.kainy.cn/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+      <category term="建站❤编程" scheme="https://blogs.kainy.cn/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E5%BB%BA%E7%AB%99%E2%9D%A4%E7%BC%96%E7%A8%8B/"/>
+    
+    
+      <category term="微海报" scheme="https://blogs.kainy.cn/tags/%E5%BE%AE%E6%B5%B7%E6%8A%A5/"/>
+    
+      <category term="改进" scheme="https://blogs.kainy.cn/tags/%E6%94%B9%E8%BF%9B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>广汽AionS笔记（持续更新）</title>
+    <link href="https://blogs.kainy.cn/2019/06/190627AionS/"/>
+    <id>https://blogs.kainy.cn/2019/06/190627AionS/</id>
+    <published>2019-06-26T23:03:13.000Z</published>
+    <updated>2021-07-31T12:42:55.039Z</updated>
+    
+    <content type="html"><![CDATA[<p>3月份看到 AionS 的宣传海报，感觉蛮吸引的，就下载了 App，然后下订。主要看中的是：纯电无需指标，续航，外观，鲸空间、内饰也可以。具体可以看网上测评，就不搬运了。</p><p>另外新能源汽车购置补贴逐年退坡，政策正引导地方补贴由购置端向使用端转换，补贴对象从车辆购置专为充电设施建设运营。可以预见，充电难的情况只会转好。此时入手 AionS 可能同享两波新能源福利。</p><p>至于为什么选顶配，除了因为360全景影像、前车跟随、自动泊车等功能对于新手司机确实有用还提供了额外安全感外。还考虑到厂家整车设计的成本已经付出，定价的时候很难完全排除这部分成本，减配主要还是扣除硬件成本。比如低配没有无线充点，但它的位置还在那里。这大概是中配车加到顶配，总价反而高出万余元的缘故。</p><p>以下问答根据自己从群聊、网上搜索的信息提取，可能存在理解不到位或偏差，还请指正。</p><h2 id="常见问题："><a href="#常见问题：" class="headerlink" title="常见问题："></a>常见问题：</h2><p>Q：从APP提示开始投产到提车大概需要多长时间？</p><p>A：汽车之家论坛有车友反馈大概两周时间</p><a id="more"></a><hr><p>Q：下订单越靠前，就一定越早提车么？</p><p>A：不一定。APP下单客户会有一个车友编号，越早支付定金排名越靠前。但是由于订单中有定制版、非定制版、大客户（网约车）版等等。</p><p>根据反馈情况，有APP下定，排名200多的至今（19年6月27）还没开始生产，而非定制版的已经提车；还有一个规律是4S店购买先提车，大定客户后提车；另外一个规律是中配（evo）已经提车，而顶配（max）订单还没未排产。综上排产优先级可能是：</p><ol><li>非定制 》定制</li><li>大客户 》个人</li><li>中低配 》顶配</li></ol><p>来几个参考图例：</p><p><img src="https://wx2.sinaimg.cn/large/4d6e3e3bly1g4gumrywprj20jg165mzy.jpg" style="width:30%;"></p><p><img src="https://wx2.sinaimg.cn/large/4d6e3e3bly1g4guox7627j20jg152taz.jpg" style="width:30%;"></p><p><img src="https://wx2.sinaimg.cn/large/4d6e3e3bgy1g4h521vwlij20u01t04lj.jpg" style="width:30%;"></p><hr><p>Q：续航情况如何？</p><p>A：有车友反馈市区内正常行驶，续航表里程比实际里程大概 1.5 比 1；</p><p>还有一篇是走高速出游的，标称和实际比值约0.9，评论的人根据仪表盘信息笑侃楼主”黄金脚法“（车速平稳，红绿灯少）😄；</p><p>另外一组数据是激烈驾驶，开空调，跑156续航掉224，这样看标称里程和实际里程比差不多是0.7。</p><hr><p>Q：充电速度如何？</p><p>A：国家电网快充，充电电流约90A，而要达到官宣充电速度至少要170A，如此看来半小时充到80%似乎有点悬。</p><h2 id="车友群"><a href="#车友群" class="headerlink" title="车友群"></a>车友群</h2><p>加微信：wesiri 自动通过好友请求后，发送 aions 即可，自动答复的内容可以忽略。</p><p><img src="https://wx3.sinaimg.cn/mw690/4d6e3e3bgy1g4ez5d89n7j20h60niacx.jpg" class="nofancybox" alt="广汽新能源 Aion S 车友微信群" style="width:30%;"></p><h2 id="个人感受"><a href="#个人感受" class="headerlink" title="个人感受"></a>个人感受</h2><p>虽然大订客户先下单反而后提车的事实，让心里有些不是滋味。但毕竟下单前有认可了预计交付时间，在没超过预计时间的情况下本无可厚非。</p><p>相信当时不少客户的预期都是：产能有限的情况下会优先满足下订客户的需求，毕竟这部分客户先表现出了诚意。</p><p>从 APP 中”趣电驾“的内容看到许多细节都被考虑到了，可以体会到工程师的匠心造车。这样的排产策略也许是重视大订客户的交付品质，所以花更多时间打磨？但愿现在的等待都是值得的吧。。</p><h2 id="开始生产了（20190710）"><a href="#开始生产了（20190710）" class="headerlink" title="开始生产了（20190710）"></a>开始生产了（20190710）</h2><p>昨晚收到短信，说已经准备生产，今天就在 APP 上看到了生产视频，分：车身总拼、色漆喷涂、挡风玻璃全自动安装、轮胎全自动安装、整车质检几个步骤，每个步骤一个视频。</p><h3 id="车身总拼"><a href="#车身总拼" class="headerlink" title="车身总拼"></a>车身总拼</h3><iframe frameborder="0" src="https://v.qq.com/txp/iframe/player.html?vid=z08983yawmm" allowfullscreen="true"></iframe><h3 id="色漆喷涂"><a href="#色漆喷涂" class="headerlink" title="色漆喷涂"></a>色漆喷涂</h3><iframe frameborder="0" src="https://v.qq.com/txp/iframe/player.html?vid=i0898217boh" allowfullscreen="true"></iframe><h3 id="挡风玻璃全自动安装"><a href="#挡风玻璃全自动安装" class="headerlink" title="挡风玻璃全自动安装"></a>挡风玻璃全自动安装</h3><iframe frameborder="0" src="https://v.qq.com/txp/iframe/player.html?vid=k089892w9n2" allowfullscreen="true"></iframe><h3 id="轮胎全自动安装"><a href="#轮胎全自动安装" class="headerlink" title="轮胎全自动安装"></a>轮胎全自动安装</h3><iframe frameborder="0" src="https://v.qq.com/txp/iframe/player.html?vid=u0898tgn84x" allowfullscreen="true"></iframe><h3 id="整车质检"><a href="#整车质检" class="headerlink" title="整车质检"></a>整车质检</h3><iframe frameborder="0" src="https://v.qq.com/txp/iframe/player.html?vid=v0898h9rwuo" allowfullscreen="true"></iframe><p>一天就完成了生产，真香。</p><p>同时根据群友反馈，有定制了轮毂卡钳颜色的 300＋ 号客户，还没开始投产，这也印证了之前的预估——定制程度越高越后排产。</p><p>生产完成后，就进入物流步骤，最后是交车。听已经提车的朋友说，一般物流只需要一两周时间，今天销售来电话约了车贷经理。希望后面顺利吧。。</p><h2 id="现阶段车友群里主要关注的问题："><a href="#现阶段车友群里主要关注的问题：" class="headerlink" title="现阶段车友群里主要关注的问题："></a>现阶段车友群里主要关注的问题：</h2><ul><li>续航问题，目前已提的车主反馈城市续航不到8折，告诉续航7折上下，相比其他品牌打折偏多；</li><li>后程续航虚问题，100公里左右出现实际里程和消耗里程比拐点；</li><li>快充的续航虚 ；</li><li>空调功率较大，导致续航受影响问题，是否有解决计划；</li><li>倒车黑屏；</li><li>产能问题，app下定什么时候排产；</li></ul><p>也有佛系车友称队续航没特别要求了，只要别太差就好。主要希望平平安安，靠谱不自燃就好，毕竟除了特斯拉、比亚迪，现在荣威、吉利也烧了，剩下广汽还没爆新闻。</p><h2 id="通知提车了（20190718）"><a href="#通知提车了（20190718）" class="headerlink" title="通知提车了（20190718）"></a>通知提车了（20190718）</h2><p>十五号通知发货，十八号到达经销商处。接下来就是申请临时牌，然后提车、检测、上牌～</p><p>以下是厂家老师对之前问题的答复：</p><ul><li>1.续航问题,目前已提的车主普遍反馈城市绩航不到8折,高续航7折上下,相比其他品牌打折偏多,为什么?</li></ul><p>关于续航里程问题,是所有新能源原车用户都比较关心的,这个和燃油车油耗是一样的,同款车,也有高油耗和低油耗。目前群里也有部分客户驾驶里程较高的,也有偏低的,我们收集了这些数据,也约了好几个客户回來起试车,现总结主要影响因素是驾驶工况,特别是市区或者平均速度低于30km/h以下的,能耗都很高,这和油车是类似的,电车也怕走走停停,这样能耗很大,而且低谏度行驶时间也长,这样车上的用电器耗电也多,这样会影晌到里程。同时不同的驾驶刁惯对续航的影晌也很大,我们确认过同一台车不同人开纯电里程可以相差接近80公里的,还有我们也发现因为车辆动力好，所以大家会不自然中驾驶较烈,驾驶中途会不自觉超车或高超120km/h等,这样都会对续艉影响较大。还有部分客户由于大部分时间都是用的中段续航里程,所以会把此问题放大,所以我们建议有这方面担忧的客户,可以慢充充满,完整地测试几次,这样比较客观。如是觉得续航偏低,可以联系我们销售店确认,也可以向我们APP及4001883333反馈,我们会安排专人跟进。</p><p>最后我们也总结了一些比较妤的使用技巧,供大家参考(最后面)。大家通过不同的驾驶方式、驾驶习惯去对比使用一下,行驶出来的续航里程看看是不是有所改变。</p><ul><li>2.后程续航虚问题,100公里左右出现实际里程和消耗里程比枴点,什么原因?</li></ul><p>主要是续航显示问题(实际的消耗与表显的消耗曲缇显示问题),目前普遍客户也给我们反馈充满后,前段非常耐用,甚至消耗小于实际里程,我们收集了大家反馈的建议,正在优化中,预计7月下旬就可以改进。</p><ul><li>3.快充续航虚问题,快充的续航虚,原因是啥?</li></ul><p>使用直流快充桩充电,充电的电流相对比较大,而且中止电流也较大(约20A),但慢充电流较小。形象的比喻是快充像倒水倒很快,慢充就像慢慢地倒,甚至最后慢慢滴。新能原车充电截止的策略主要是以单体电芯的电压检测来判断(也就是说根据到定值来判断的),所以大电流充进去,单体上升的比较快,当系统检测到上升最大的一个电芯电压达到设定的阀值,系统就会认为电池已经充满了，开始停止充电。但实际其余电芯在快充后还会有一定的余量,因此感觉快充的电量实际没有慢充多。</p><ul><li>4.空调功率对续航的影晌响,后续有解决计划吗?</li></ul><p>Aions的空调功率设定比较大,主要是为了给客户营造更加舒适的驾驶享受(空调功率越大,制冷效果相对会越好。就像我们家里空调一样，其实不是买得越小越好,不然空调要一直工作,和我们家里空调原理是样的,针对大家反馈的空调能耗大的问题，我们会继续收集大家的心声,不断改善，同时希望大家开车时,要控制好空调温度和冈昰,这样能更节能。</p><ul><li>5.产能问题,app下定的都什么时候排产?</li></ul><p>感谢大家选择我们车型,目前我们产能已快速爬升,预计这一两个月内陆绠交付,同时也在加快车辆发运,有效缩短订车用户的等待时间，具体到店时<br>间可以与销售店确认。</p><ul><li>6.倒车黑屏,原因是啥?解决计划?</li></ul><p>倒车黑屏只是极个别车辆出现,主要是音响主机软件有小bug,目前厂家已经发布升级软件给全国广汽新能源经销商,大家可以抽时间到店进行升级就可以解决这个小问题。</p><h2 id="黄金脚法口诀（20190730）"><a href="#黄金脚法口诀（20190730）" class="headerlink" title="黄金脚法口诀（20190730）"></a>黄金脚法口诀（20190730）</h2><p>群友大酱分享的提高续航秘诀😄</p><ul><li><p>续航要长，慢充是基本，单踏板高回收是必须的，空调不要开太低温度，25到26度，2挡或者1挡风量。另外就是开到时候充分利用单踏板的优势，减速时候慢慢松油门，不要一下子把油门松开，滑行时候找到单踏板电耗为0的点，然后回收的绿色条基本没有状态，稳着这个点滑行，对于延长续航很有用</p></li><li><p>另外外部节能措施就是玻璃贴膜，贴高度隔热膜，有效降低空调能耗</p></li><li><p>不要用油车的开法和思维模式对待电动车，最多半天就掌握了，然后就会发现单踏板模式优点很多，除了省电，关键是安全，刹车距离大大缩短</p></li><li><p>习惯单踏板高回收模式其实很简单，减速尽量避免急减速，急刹车除外。电动车是这样的开法，这是电机特性绝定，另外加速不要猛加速，缓加速。</p></li><li><p>这是aions 的长续航开法，只要做到了，市区开就是500左右。</p></li></ul><h2 id="提车风波（20190801）"><a href="#提车风波（20190801）" class="headerlink" title="提车风波（20190801）"></a>提车风波（20190801）</h2><p>7月最后一天拿到临牌，第二天就提车了，然后按照汽车之家论坛<a href="https://club.autohome.com.cn/bbs/thread/1ed3b9c750253ada/78305335-1.html" target="_blank" rel="external nofollow noopener noreferrer">坛友的推荐</a>，预约了澳康达服务站。</p><p> 感觉态度一般，但起码都能告知你需要补充哪些材料，怎么处理。因为没有体验过其他车管所服务站，不知道坛友在其他服务站遇到的情况有多糟。总体来说也推荐澳康达服务站，至少环境高大上，展区停了不少豪车。</p><p> 波折发生在到罗湖国税局<a href="/2019/08/190801提车风波/">办理购置税的流程</a>。花了一下午搞定车购税和注册，只好第二天再来制证上牌了。</p><h2 id="头一回上高速（20190817）"><a href="#头一回上高速（20190817）" class="headerlink" title="头一回上高速（20190817）"></a>头一回上高速（20190817）</h2><p> 周末驱车700公里陪吴老板到韶关还愿，顺路带了两个乘客，差不多把高速路费填平了。去的路上发现之前装的ETC提示“非法拆卸”无法使用，才知道，安装过的ETC，换位置后，需要重新激活，回程就OK了。</p><p> 不过这些都不是重点，最大的收获还是在高速上实践了一把自适应巡航，确实让高速驾驶体验提升不少——前方有车的时候，自动跟车，没车的时候，以设定的速度前进，司机只要扶着方向盘，观察路况就可以。真正实现“老司机带我飞“。因为是车辆自动判断、主动控制，行车加减速更平稳，能量回收效率感觉也更高。</p><p> 这还只是L2辅助驾驶，可以想象，单台机车实现全自动驾驶后，结合大数据调度，未来路面交通会是怎样的场景。</p><p> 另外一个发现是高速上充电桩充电速度还是比普通快充快一些，而且使用率也比较高——毕竟都是在等着上路的。</p><p> 相比之下，小区里的慢充，和停车场的快充使用率会低一些。梅林一村周边，小区充电基本是交流电慢充，需要车主解锁后才可以拿出充电枪，这样就需要同时满足车位和车枪两个条件才能充上电。附近莲花山停车场的普通快充，虽然不用解锁，但车位占用了就算拔枪，也必须有临近车位停靠才行。</p><p> 所以通常停车场快充使用率50%左右，到场还是要等待一会儿。而小区里的充电桩，本来数量就少，还得先占位，再等枪，比如梅林一村停车场的两个桩，只能四个车位够得着，一般是两个车充着，另外两个车位被占着等枪。等到app显示空闲了，等枪等车主会去看看已经充好的车是否拔枪了，有可能是充满自动断开充电，但拔枪还是要等车主来才行，所有可能白跑好几趟才能充上。总之梅林一村的慢充我至今没用上过。</p><div><hr><strong>为您推荐</strong><ul><li><a href="https://blogs.kainy.cn/2019/08/190820提升电桩使用率的思考和未来路面交通的展望/">提升电桩使用率的思考和未来路面交通的展望</a></li><li><a href="https://blogs.kainy.cn/2020/07/车主一周年小记/">车主一周年小记</a></li><li><a href="https://blogs.kainy.cn/2010/01/驾照考试（科目二）经验总结/">驾照考试（科目二）经验总结</a></li><li><a href="https://blogs.kainy.cn/2010/02/司机必看：46条保命驾驶技巧/">司机必看：46条保命驾驶技巧</a></li></ul></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;3月份看到 AionS 的宣传海报，感觉蛮吸引的，就下载了 App，然后下订。主要看中的是：纯电无需指标，续航，外观，鲸空间、内饰也可以。具体可以看网上测评，就不搬运了。&lt;/p&gt;
+&lt;p&gt;另外新能源汽车购置补贴逐年退坡，政策正引导地方补贴由购置端向使用端转换，补贴对象从车辆购置专为充电设施建设运营。可以预见，充电难的情况只会转好。此时入手 AionS 可能同享两波新能源福利。&lt;/p&gt;
+&lt;p&gt;至于为什么选顶配，除了因为360全景影像、前车跟随、自动泊车等功能对于新手司机确实有用还提供了额外安全感外。还考虑到厂家整车设计的成本已经付出，定价的时候很难完全排除这部分成本，减配主要还是扣除硬件成本。比如低配没有无线充点，但它的位置还在那里。这大概是中配车加到顶配，总价反而高出万余元的缘故。&lt;/p&gt;
+&lt;p&gt;以下问答根据自己从群聊、网上搜索的信息提取，可能存在理解不到位或偏差，还请指正。&lt;/p&gt;
+&lt;h2 id=&quot;常见问题：&quot;&gt;&lt;a href=&quot;#常见问题：&quot; class=&quot;headerlink&quot; title=&quot;常见问题：&quot;&gt;&lt;/a&gt;常见问题：&lt;/h2&gt;&lt;p&gt;Q：从APP提示开始投产到提车大概需要多长时间？&lt;/p&gt;
+&lt;p&gt;A：汽车之家论坛有车友反馈大概两周时间&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="东写西读" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/"/>
+    
+    
+      <category term="汽车" scheme="https://blogs.kainy.cn/tags/%E6%B1%BD%E8%BD%A6/"/>
+    
+      <category term="AionS" scheme="https://blogs.kainy.cn/tags/AionS/"/>
+    
+      <category term="广汽" scheme="https://blogs.kainy.cn/tags/%E5%B9%BF%E6%B1%BD/"/>
+    
+      <category term="新能源" scheme="https://blogs.kainy.cn/tags/%E6%96%B0%E8%83%BD%E6%BA%90/"/>
+    
+      <category term="埃安" scheme="https://blogs.kainy.cn/tags/%E5%9F%83%E5%AE%89/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>房屋出租记</title>
+    <link href="https://blogs.kainy.cn/2019/03/%E7%A7%9F%E6%88%BF%E8%AE%B0/"/>
+    <id>https://blogs.kainy.cn/2019/03/租房记/</id>
+    <published>2019-03-13T10:47:00.000Z</published>
+    <updated>2021-07-31T12:42:55.073Z</updated>
+    
+    <content type="html"><![CDATA[<p>尚书苑交流群（QQ： 558636051 ；微信群加小助手 wesiri ，备注尚书苑），邻居们可以加一下</p><p><img src="https://tva1.sinaimg.cn/large/001pULAngy1gqusyhtir0j60ku11cq5f02.jpg" alt="深圳福田梅林尚书苑小区群二维码"></p><p>朋友去年底入手了一套地铁梅景站边上的一居室，还没从“高位接盘”的焦虑中解脱，就遇上租房的糟心事——屋子从年前放到现在空置着。</p><p>本着为好友分忧解难的想法，我自告奋勇问好友要来钥匙，好友见有人出力，很放心的把门禁钥和匙交给我全权处理此事。我于是开始了人生头一遭的包租公之旅（其实也是作为信用分191的三年老自如客，心中早堆积了100+困惑需要一场出租实站来验证）</p><a id="more"></a><p>我首先在自如APP登记了房屋信息，并获得APP预算报价范围3390－4520。</p><p>几天后，有收房管家联系我来实地看房。并讲解租房事宜，大概就是说三年起租，自如负责装修，成本大概两万，首年50几天的空置期，第二、三年20几天。大概每年一个月左右。每年房租涨幅3%－6%，然后就问我预期价格，我说你先给个报价吧。</p><p>第二天出方案，给了3600的报价，和前业主出租的价格一样，可那是去年的价格了，何况要签三年，我觉得对方没诚意就回绝了。而后通过中介给的直到租金价格是4k，而自如上相同条件的租金是5k＋ 虽然自如有装修和管理成本，并承担租不出去的风险。但空置期的设计基本和风险相抵，而压低收房价格和租金涨幅，任一项都足以抹去装修成本，余下的就都是收益。刨除运营成本，利润大大的有啊。</p><p>我于是想，能不能尝试绕过自如，按照收房价扣除装修费用，自己出租给信用分高的租户，于是到豆瓣小组发了<a href="https://www.douban.com/group/topic/130392307" rel="external nofollow noopener noreferrer" target="_blank">这篇</a>和<a href="https://www.douban.com/group/topic/133072168" rel="external nofollow noopener noreferrer" target="_blank">这篇</a>但也是咨询的人多，谈到价格能接受的却寥寥无几。</p><p>眼看一个月要过去，难道这事要砸我手里了？这时候事情出现转机。接到蛋壳管家打来电话说这个月蛋壳准备上架开间。要来看房。这才想起之前也在蛋壳APP登记过信息，但得到答复是蛋壳暂时没有做单身公寓的产品。没想到这么快就有了，真是天助我也。</p><p>最后签约的价格高于预期的4500（几乎是周边同类房子的市场租金），还包了水电管理费，后来才知道，这么土豪的原因是蛋壳刚刚拿到5亿美刀刀C轮融资，不差钱。。</p><p>手上有房源出租的朋友可以推荐你们这个管家，很认真负责，实在的小哥。真心替房东着想，帮我争取了原来已经放弃的100多元/月管理费，不会像某些其他的管家为拿人钱说尽鬼话😄，不会有满口承诺无法兑现的那种做法。</p><p>以上就是我的第一次房东经历，虽然付出了时间了力气，却也扩展了一些原先的认知盲区。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;尚书苑交流群（QQ： 558636051 ；微信群加小助手 wesiri ，备注尚书苑），邻居们可以加一下&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/001pULAngy1gqusyhtir0j60ku11cq5f02.jpg&quot; alt=&quot;深圳福田梅林尚书苑小区群二维码&quot;&gt;&lt;/p&gt;
+&lt;p&gt;朋友去年底入手了一套地铁梅景站边上的一居室，还没从“高位接盘”的焦虑中解脱，就遇上租房的糟心事——屋子从年前放到现在空置着。&lt;/p&gt;
+&lt;p&gt;本着为好友分忧解难的想法，我自告奋勇问好友要来钥匙，好友见有人出力，很放心的把门禁钥和匙交给我全权处理此事。我于是开始了人生头一遭的包租公之旅（其实也是作为信用分191的三年老自如客，心中早堆积了100+困惑需要一场出租实站来验证）&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="东写西读" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/"/>
+    
+      <category term="生活点滴" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/"/>
+    
+    
+      <category term="租房" scheme="https://blogs.kainy.cn/tags/%E7%A7%9F%E6%88%BF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>以webview为中心的小程序开发模式思考</title>
+    <link href="https://blogs.kainy.cn/2019/02/%E4%BB%A5webview%E4%B8%BA%E4%B8%AD%E5%BF%83%E7%9A%84%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/"/>
+    <id>https://blogs.kainy.cn/2019/02/以webview为中心的小程序开发思考/</id>
+    <published>2019-02-14T22:20:16.000Z</published>
+    <updated>2021-07-31T12:42:55.052Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>webview是小程序内承载网页的组件，官方开放这样一个能力的本意应该是扩展小程序访问网页信息的功能。但对于某些场景，以小程序为中心的开发并不适用。例如营销活动，针对节日／事件的活动页追求时效且量大，如果都做成小程序，时间和人力成本都很高，再加上支付宝、百度、抖音相继推出各自平台的小程序，适配工作量将成倍增长；另一方面，小程序的发布前需要审核，审核就存在不通过的风险，审核时长也是不可控因素。</p><a id="more"></a><p>也许你会想，这类需求直接用H5（后续用“H5”代表移动端web）来做不就得了？在以往的语境下确实如此，比如图片保存到本地相册这种常用操作，以往通用的做法，都是指引用户“长按图片”。但在小程序已经提供了访问系统相册能力的今天，类似的事情难道不应该被做的更好一些么？</p><p>针对上述场景，和改善用户体验的想法，需要思考一种开发模式来把小程序的能力提供给H5。让营销业务逻辑仍然集中于一处（H5），小程序通过webview组件承载H5并通过统一接口，将各项能力提供给H5调用。能力封装和暴露，由各个平台的小程序事先完成并上线。从而可以隔离小程序审核引入的不可控因素，并实现公共功能逻辑的复用，即“以webview为中心的小程序开发模式”</p><h2 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h2><p>文字描述或许不够直观，可以用浏览器／APP扫码看看这个简单的助力应用demo做参考。</p><center><img src="https://wx3.sinaimg.cn/mw690/4d6e3e3bgy1g0btjwfoa3j20ku14gtbs.jpg" alt="演示二维码" style="width:50%;" class="nofancybox"></center><p>业务逻辑很简单：</p><ul><li>用户访问的时候，客户端分配一个id标识；</li><li>可以分享自己的主页，邀请好友来助力；</li><li>好友助力后，出现在自己主页的“已助力好友”列表中；</li><li>可以通过列表中的链接，访问好友的主页。</li></ul><p>这个演示的基础业务是记录助力关系，并且自带用户系统（保存用户id），是纯粹的web应用，不依赖第三方环境。</p><center><img src="https://wx3.sinaimg.cn/mw690/4d6e3e3bgy1g0btjwyozjj20hy104jt9.jpg" alt="H5页面" style="width:50%;"></center><p>但是id毕竟不够直观，普通浏览器内复制地址栏的链接分享操作，也比较繁琐。所以可以判断如果网页在小程序环境中，可利用小程序的获取用户信息和分享能力。结合API成熟度和用户体量，考虑先接入微信小程序。</p><p>于是我们在自己的主页中间，新增了“邀请好友助力“按钮，点击后，进入分享页面，可以分享小程序卡片到微信会话或者合成海报分享到朋友圈。</p><center><img src="https://wx3.sinaimg.cn/mw690/4d6e3e3bgy1g0btqt7iurj20n01dsdi0.jpg" alt="小程序webview中的H5页面" style="width:50%;"></center><p>在个人信息右边（个人主页右上角）新增”绑定微信“链接，点击后，进入登陆页，支持微信一键登录和手机号登陆（已授权过个人信息），登陆后回到个人主页用带回的微信资料根据unionId完成账号绑定。</p><center><img src="https://wx3.sinaimg.cn/mw690/4d6e3e3bgy1g0btjxf65mj20a90m674q.jpg" alt="小程序webview中的H5页面" style="width:50%;"></center><p>可以发现，两个调用都需要跳转小程序页面后完成。这是由小程序webview通信机制决定的，webview组件虽然可以通过<code>bindmessage</code>让小程序接收来自H5（<code>wx.miniProgram.postMessage</code>）的数据，但是由于只在特殊时机触发，无法满足通信需求，所以考虑用小程序页面跳转（<code>wx.miniProgram.navigateTo</code>）实现传参。</p><p>至于小程序向H5传參，可以通过设置src中的hash部分，实现无刷新通信。通信机制并非独创这里不再赘述，具体细节网上有很多参考资料。</p><h2 id="webview-SDK"><a href="#webview-SDK" class="headerlink" title="webview SDK"></a>webview SDK</h2><p>把H5对小程序能力的调用和回调过程中通用部分抽出来对外提供统一接口，可以降低学习成本，方便接口变动时统一升级。</p><h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>通过简单的演示应用，展示了通过小程序webview组件，为H5提供小程序能力的思路。适用于上线频繁、且时效性要求高的场景，如营销活动页开发。这种模式的优点是增强H5应用调用设备的能力和交互形式、提升用户体验的同时，控制小程序开发可能引入的风险。</p><div><hr><strong>为您推荐</strong><ul><li><a href="https://blogs.kainy.cn/2018/07/博客／资讯类网页在小程序中分享的方案/">小程序分享网页方案</a></li><li><a href="https://blogs.kainy.cn/2020/11/201116小程序插件数据统计/">小程序插件数据统计</a></li><li><a href="https://blogs.kainy.cn/2017/09/小程序页面“乱入”问题的解决办法/">小程序页面“被缓存”问题的解决方法</a></li><li><a href="https://blogs.kainy.cn/2018/03/180328总在深夜放大招，小程序官方团队真的没有X生活？/">总在深夜放大招，小程序官方团队真的没有性生活？</a></li><li><a href="https://blogs.kainy.cn/2020/12/小程序插件用户信息功能页/">小程序插件用户信息功能页调试问题的解决</a></li><li><a href="https://blogs.kainy.cn/2016/11/小程序金融保险行业应用交流/">小程序金融保险行业应用交流</a></li></ul></div>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;webview是小程序内承载网页的组件，官方开放这样一个能力的本意应该是扩展小程序访问网页信息的功能。但对于某些场景，以小程序为中心的开发并不适用。例如营销活动，针对节日／事件的活动页追求时效且量大，如果都做成小程序，时间和人力成本都很高，再加上支付宝、百度、抖音相继推出各自平台的小程序，适配工作量将成倍增长；另一方面，小程序的发布前需要审核，审核就存在不通过的风险，审核时长也是不可控因素。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="https://blogs.kainy.cn/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+      <category term="建站❤编程" scheme="https://blogs.kainy.cn/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E5%BB%BA%E7%AB%99%E2%9D%A4%E7%BC%96%E7%A8%8B/"/>
+    
+    
+      <category term="小程序" scheme="https://blogs.kainy.cn/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/"/>
+    
+      <category term="webview" scheme="https://blogs.kainy.cn/tags/webview/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>不是一个轻松的决定</title>
+    <link href="https://blogs.kainy.cn/2018/12/%E4%B8%8D%E6%98%AF%E4%B8%80%E4%B8%AA%E8%BD%BB%E6%9D%BE%E7%9A%84%E5%86%B3%E5%AE%9A/"/>
+    <id>https://blogs.kainy.cn/2018/12/不是一个轻松的决定/</id>
+    <published>2018-12-29T22:20:00.000Z</published>
+    <updated>2021-07-31T12:42:55.050Z</updated>
+    
+    <content type="html"><![CDATA[<div id="hbe-security"> <div class="hbe-input-container"> <input type="password" class="hbe-form-control" id="pass" placeholder="点击这里，输入密码后按“回车”键" /> <label for="pass">点击这里，输入密码后按“回车”键</label> <div class="bottom-line"></div> </div> </div> <div id="decryptionError" style="display: none;">Incorrect Password!</div> <div id="noContentError" style="display: none;">No content to display!</div> <div id="encrypt-blog" style="display:none"> U2FsdGVkX1+3LDq80gE2EI6ecUSOC/vURR/qpyEJuc/Skjdwr6tabcF5GPLglQOf8TPmTi/9OErVFSyLAuVuq3+31c64lCuIpV5dJpI5NXSrhXxPPqcOLVX+J9oxWRzbKKxz2soRvgNduEcrBS6lej+Lc4tmCBixbHrrnGvLn8nzHdpBHZEhwh6H7PRgNcKJ8fbfTkSwa1zZzk+JALu7qLYxn3L0EqeCKcwMDG0/cPH7+5h+ZTOave238MyakgBK75ILGqyUp4VYDR3qQ+wDhC0jnO880lREJbJXEXGx5CDihepKQXkibKLO8jzL3Dh4UIF+n1U6/f5eo5KKOrEYuVsXB9sh6ohcuUdHaeuzqMt7hdrOeBC2nh3n4KHr9X7D/ccR9+mKSVamsLCYbu9c8TnJEswcWma2CQBwcND71BEVOPk8nWlxjPsoyksryCfpEy27UBRPyhnSdRXwQpsDGzcH3G+LGCUMpl/eo1RqxVRW+YQ4RnwaKuwrF/HWZOrCebM2EsOQx8EWveXtAftCGPnB7KaHlKi7gbDmdadX/A1lIePHCdPqDvC28vceVzMX1LiyWQWazmkz0BIVj02u6I7ltKTTDfJ/9s//kxjJGcBNo2Ikw4Jzln89faQF26L87XoUY+AYSFZVuOrTVpOAMBtIiwm9CyQbDJ/wt6fEu5yTfWt41gz9glE8IentywshxWxr38GAbBR/GCCBtC/uNZf6SIZ6ojb/ULpXb+YUq8qFpu2Y3Fi92dI6Gv9nXZOghyhz5Pi24J5kXVMjg8L4/WGPUtrreYOkSSehY4wWV8TU22YE8d5Zj4m+TMSjqMuruH24BlWsFx4HfT2sSScNpWpPtyBrkKlW4whuC9GsiCTrB+e+5xBdrv9LITxnD5aJOOLVc1K44aGwtzFit1Vbp1COobYYi4MCBeriN0RXYPKu/dZWPv+Mp9ehrt/myBrmp5SY4beEhtK4pLzaj7LmBOwyDOzEfVQhtSRh21hyHxigNljMeCI261yoJsOHgMMMDYzSt3/dzq2Ob6+7kEPVPS8Vkwu6rGccrd+bTEf+hhF7fnCiSTWvVvXRnrCRtBBXWHSUGOFAAKxq/Cqh8yJgCfk5x16qN4L7VFHCSqk2x8SpgayTJjvMLRBW3QHpccDyabf0FuD7sm4EG8fJrtUPkth2r2s8K4LY+LbY6mXiLROtjhSUIC6uhyueA3ZaspoQoZm8hfS8XX8o5LqXAK+T5XV5aWor5LOlLuMX9M6FkQ6aCUpqiZ9RwJl8yEb24D2s0xtzFGIyp/gTBMbUnC7V7VObL6YHU+VvHKGHkPN57q2igd4i91Nwi0slVyQJTVkh9d85s9OayQT3FdO8ffw+68fxPQktPsrggdHBi+BMvwnytqzhVEmER+n4y79L8fmSM5cyosbPE5mr0SZAiw6xYIDoEhYM8U3OIU+OFfxW/CfNNqb7q7EOVTgZv0MtKfqM+Sb8IiPKpsciuw9cbZ4NHoIsYFKypg9+MIBVee7jU6DKZ9AJXnnP1plxf3X7y8pyZ8ecCYAD6yqJ62dUhDLWGhwMlUuBdILii/oM4AvN2YZO4B33iBkjYE3stx5Kr0cNigUCLe6OaikUvnhY8SFWmSN4voSUDksilndgGUgpK0jxZteEXCIdSLFV2PAfz31ppH8TEsyJSiOTlblNQlPtG7FStPHlHpIId74pbQPUx4/Wf9MH9M3Hzknfu5ztS1/rTrHgh06kWhmGz3+OOImVJgXSvwZ1woErzW/U3qQtDw93uFgaVwQI+UTC5+I6wPf3A1qQ4lZ/XD21Tk/qde7b0pUVrAcQxGiN+8/NKgMUt/INsl3zLebknyP/LuRozePBPjS5STFMp07DpJiWKIEza97z+zMfWjDFYiwerYpW0Lch4pUVHdK6KDpUtvZUEWmpiuoDr9VSSX2QpzZOSUy310NQfhx64ZVr31C91soi+5o1Bn1hX7JDohCfNPhwvA7/jdpEDkqncHXXdrPdRkyJDfCkkelczPwxDBgnDPuG+1hLKi17iou/+flq/oPz4EmA+lIy5XY81LpuAI1aYg0Sbr0P1+qLUDXNwbpU9IvtOuxSRtJi5qaYzqL42L/LBSwwM1djZfTMSbzEfe/gntITD1Rog+A/7sjVs1qdTcr+H33cgaPpqEnPFNuEYSoZ6Q0XmMCCpd6LPY1LEYMONRaczZ7LOB9cHfSuR/0dJIG7h+pi1NB/GqfHh1P0uJJuv2idjgXNn0ODmfNnMoqbfklJYdyQ3HM6s1KKpSO6SgulAqF+My+56UOx0+Xbdx8tbgi5uS8po5YTbt0VmtoWHQKj+55woQ3khr9dWfj2giR3+ovIiNejVfIjCeinnphZOGW1EXBka5F1wMG7ps3RxFr7NzUxzCD1iFho6gQ364j102G8GRoDD75vwmJTfg+jTXDXsOJkm6bvIMxGYMTahejnlu/fJlcgAT6CGirTtvsi9IaBo3HuDawm3oiCCAxEw5XPJMXIR1mquD3hTpxRa+4TJPkdHpD5mFdBiXpqxudSP5Z7W7t3X15BjdXLUpibnqQEUukQ6fAM4C2ghpkr/BefDsqzR4BuglRtrgnVsYBhnMdWUyz2jO45CWeikKt9JWCpQrpq6Zt0XUdefW8jKMLCfCueqG8Z6FJk7hHao4lrJaEIcreaZl8KASYdvx18jjEje3iHKpP7ZREXE3R3zpfOwqIxXcB/UM5jZIhAAx8ilgTBM8CXCmhFHnYbsx2Z6YLMgbf84nhfJqVGVifaPC6qzus/aRkGKrS/b0qtSqLep55rd6+tocVzS8+53ohZFQ43b7yfHO/4FoPqW22ccCrt7BE1g6T3LlI+lhi9KaJfvHrzJIEXrBqoAzd4hlH87YWCQ/octM+bdAdpQef6fv2uPBl7yBiQ0qwPaibX68n1LOyRAJ6yvPtmqESBHhn3/X5NyvICwh2GwprbjTV7SZgQTWCoo1hrDK7bRlZG1SQMwwrMO35qhByckyl9EcVgBeBAVZ4/I1L47LE1rAT+OzPzXw5gPH+qkeWY+34lrbNP201qj2mi9KRMhPypqtrRdgY8I9Zf705jGzb6VHObduZeSixSZHGGuKosO2lPMbxJ5jKWK8MfwKd8saaNKx9WPuJkALTuo92SWlVBHBYNpxgUZyFzdnkgWnP7InVzwuKWXrANqJMIm0zp1n0qroCDZRoGGLi2pn1Xg8uoVi6cEWmzn+H4pCit+Hfp3r1YZ8FJOKNmvyio4Jzj5XveOg1H6DowXDFw/lY4octW7G4hLLqpRL6/96HADjWf4eyhUT0vWFgHeb302khR7nTT9n9+clh7DxQ4tsdkhAsMirdXob0bb48m0lXP7R4btNqwvSOt6JLsq2I5vyzW3T2fTXkzhePKQlfRL7Cxb5X9PM4yU0ymCebfZPOr5FILlLt+8rj4JD/dNSrixJh2U1bW2a+P3xPw1iWdUFPxeM1qw6aU3A7xGcfZoDQUTVWHxTA5O1hsf2+4E0Hppkm+Yv8wd6/uo23laaNpiQYwFA+rscrOxbgGOdanTJwQ/BFoWmX0giyOBayydPm3Y8n6sa/QalgTmG4Ks3CYqfkfJJggpmKTGb19fa7UnPGFxuL4aAIGWiM1OGqRh59PY7GxmGiP9EOhcf+AxQrtHyHt5D5LQGDDgQPt7k7wewkLgWdHZBT1jcMAD+ZRR6mwwLKybeCpWkPa9YoAU2Agp619kvCvW91HuWy/oxbwnz/4hEMXey/ysotJz5rcreyWZUHDPW5uFCyEBi2l3EspSO/ad6KA7BToOPMCPpAg38b0/CT+e5g7rIr2FME9LLjhwEnB1SplPM6VYPByulJXGdxcIn+hssobvbG2+tGijTdU3DqGrUnG4w495S5ecGeZM+0MHaT2B8BOx+LSC8DuiNzBXKXrVFKqJxOPDVy434qlBdr4ruKcUZYuXKmC/HeZq56OZZWBLEr/OUtpGj523QwC0UAcWyMMeE15YHZ7xMC8lRuNREy7dBOcVPgG/FXhPYoE56LL6QpYVtlShXa7+nFbQDTrQ4SVR2wSpQt4l9MAY19kuzC5VEf0QbGN2FohrAElWPRvhTEQFw9fhnkiywVxtRMmqJbyMDkBcEOHtVBTOS4yxuXJ6Q0ZqLctrVLIz3XCGRJuhn8r10h4sVc4gynjyg84gimkkiOA7HHXXzCt6Qvwh/iCuymhaw7VMMvVH2oeNVevEaG1NM9Z2VWDFu7hxOeM2jV7VT4T0RA2Ac/uRqXrBr71UMVFzvbYkK289WqJgZY9XX1PKsxkw/dgDvXndwaOjNxF0Dw3eySoKrswN59hgLzFiWpOH3st++vCWJ61HdCHae2m1I2ITpZ1SZpuEYg/kcNr4FS4r351h1O2IoVbl1FPey9IZLXjmn3OFJSyBN3dnz3IhkKWb5MHWaQzeCWve2kshNNjmM1ANRYVnwnccgnHAQRKYkjU8QCIxI+EgH5yobvh8CO0+pYqLtVXLtYbMwsAGtA1xbuxWY79Tc3h+zoAyU4S6zwx8IXjPTmQEOohDiBalWQZdYMT4lvMyotQzKNfGBMxN3C62SJG+i99f5D96hxj66UBjC3hIdIJP22GP8KdOk7puzHiJ2P5aX6c7FG9Mji9UylUG0PyMF4AfeT4UuvYW+nwKNvoUTNLUkP2r8XvwD+4JjRwoYEfbtsI7yGEDUPVz385FeZSgXCfNVJvCXspfI0Fqo5JDo9jo8fQwIVCX7qBALnyojxDBRmGPq6v/ZlmjF16J+4ZJAgFzkla3eB1NMgk/n5mdtaNL+1+r5Tb3wkJAtaOlIOhaA3TjcG84vUUgSx4fSIzcsFjKTIkHaxWD9wLt15y65+/eJBc4b6nBoUld8BsIKu363RRsoRMt6CSv6XOCvGZKp0RrCdSNl5gDlVTM6/Nutt9j+QzfqvJ2u+MVJgcot2UpqAJQcAAAwJkLg8DJQ1xn7aAHGZ9e6J2odqfRS+Qrns70BVIVhDCKbfd3NS/gnVN5GE6y8ZpRxZthuAS0jZJdrxDZrb2tjyPRRb3+rrFyDeyqAxbSlnU7h0NrhUPDZrL9W0haqTipHI9ONUXSs3/ce10cZjAAB44/dcNxn0i/GSdnPV+fCJi8SMOQbGDLXR/VYPZ7hfbWRC1BMTdi3CVP0NjosyAJqdpbTxiW87T4x5PT5qDj3h26ZjpnYvQ9O3FLz5gmi6A0XLv0fFDsClZH7Ui+HnRXW+QvkUg5nPWhOOKn11p9UHtgP7IlJBSSWZ5POWtQ71N1m1ZKjgFRLdhmpXBF/twsnQ+KaPj50fxo9vMlmiAGG9rhZBII0+oCQi5Dlpjp6iPJzL/180aq/Vg4mXpB5uHOBTW3EmiYfpbvEucN3yO113dTsQOWkACsMOuZpwH+m4tKwgXUfNOyHdcXcvP/j11UX3i2FwrPGae8L154oJluH3OY+ynfiLJTBKNVmtx7l4FC1DI6UWsxjdeISGcJ461DtdfY3mFXYwgC/ErJgDvEuXCB+svbhgyuQvWhjkXrzKvECkC8UBCiC2HtDue80ctVXH1hVjJ0tmNjO2yvPIpdk/iSLCm/0kw88OR/YQbJeblS5tzsYI4qdKb3IGyolADKGcBHkENFz4hp1OA3sqQkdas3skFzRC5YKgM3UkBHM0/h37H3BduV+6/ZFa2B+RN+/lRBhrMDPcf1C78DltRgbVEPNkH3sHT3OdEQ6bbkpymHb7q7nAJDxRVmfgFj778SZWqjh5fyk2sOebo6wrOwqHvpAy8PvblMr4LwUKEItC61c6PTbWw+UN/N0XbKwaPx35Hf70qUwVOLXsp8aJecgxbUxVdXs36SIbxsXIk3eyq78mSv9ORXwhaAKorySusVEIPF44AQUNRHlkUa2Fe7kdS2pl3WxyH2Qy8H1RoybdpZutLIgU7XqvdSU2pgshXijZkOj5Y6ESdtzo/izEGkEKb/HOhOzbHH1K1TA3sYv3Q3qV7tno+RfPerSdrpV5icB+8n7zvebe5L37r3GSDvCp6HFICYN4wdcY/ZdPV0viwlKu95pB0aUvL+0AFhZmsi8ukjVV3SRSLIaIoSkfjLJSqL2bNtUehlKdQBMtCH6QxXNtwef4quN91F84XNGON/09EU9RFf1IH73SIRN9wIurDKC1U8ehLY6uz3XbSOfa9wbV292t8OTsbvIoVS8ofSGi/v4SF48f4giN2ELABpLr7gd7ZZ8c84rpV47iEZMuwdvshDYN9EJAtZ2qHLelkt3p7A0FGDA/HVJnLwTcu5srSgngfn5Jkxt98rArZVWigJzAbKaoJNs8xrztLXr3ag7sCGcpY2xv5uwyp5xDf9o2nOmVr7250ttw/R520cIaFsXNlLvW68NL7S4Q5nbUSxpYqo5DKsdJQtrM06q7MwOIdiVHSbh2yh/zwNu0h9zjce6ju58F2a/EixQ+LwR4G6N3TVdtprJGuyUo8qT/3WCoOkWc5lBmN9RB76GeUtxXYH4B1/NLonJbSCmLnj5NQIdrxTsPpzRGYOcQ29Wsecl8rqQI5NybpUd7T4Fxxo7QWm+uSgZ8GJuW77z9jRUjvaR8EqtAkfMkPBMWC7flehfH8vrgFFCOwMPVAETWmfm/rG3Q6kx9vwOoHl4zEci7bpkpauqt/1YHot1Se6FPBrUcmY0DcIWFcKnCzpfYqKRuBDKooKgKsYmKkdenY+3e2ri064YprG/94NUu2oBd0fqrXyjtL46w9kMw4zEy0lOSMh48yNPKeuvK6ftZEhvsiCCKT/F6rlgWGNY7YjUJQyLRfjqHj3mtJ94GX5ESoR9IyIW01LCBuoWfzhuvQhiV+jJLaZ2I4cuESDF4THVJJHQ5enaaK8JerTaeS+j6erlEsnYbtFWyLfCne2xRb0Q1B63TTeTTvxGjjUQjqw/tVzhnP6eejQHpX/+yoQeLl0of0w2wi5L4JtSSfGrpx/kyTqqQiy2herRFTlyyHVN3+UJuWDkrGIXQRJ1ysq30iYcCYYu5yzvWW+rs90s7h64g1DUDKyYVX7nbFla7rg0KnCqEv9uYKK11Nf6TEgS3lcKSfTarTSt13FWFA0+izxyNgrmn5ga6shN/aM2npqdxFDsZRPhbqE76Oib/bkWG2ZQkd3FY2JT+QhnHI+tkVkOa88zrexNbGkVX/FeeQJJ/KHdlJViuMVW20i01+JW9n4HCgI2a4W788l7ymrMQAujVl7cloJ1HKfZvlAZ4LHm+z5C/6wTv2EzM9pC+dDE5Yp6veEd+KOTX7KAfRhsSRbUxagtPj9FQJJtOH/SVpsiUHijQQVUSEad1EYT1YPf2wJcm5Ca5pJ4NNd5rj8vxlaNZFZisKvyrgWXWi7vfi7dy1rriq+KsQ9DhRmRcZYLxN4DoZge0enVDPg06C5/1Ak1UWQH4Cf8X+0T0hxJ0QCE/D9HWSq5q1IHS6f/iMLvRr/9TH8b7xQn62UZE3/rUAK57YCa1r1N99eIwM6NU+1/pbRM5NJgc2Y8oxowsXDBaNS6y8tswNMKoT3DoVSOvO21/e/ZvdlPziIIuaJtZDz7IoxtGZpfnrqUiSXaN0gHCwGd9vFnKKMz+8dbB4XVFz+7zH/a1f/lU9JZpuyuZJLRbN72N7y8AqcoH5+drhKHRqXYDyGVY4A/Lig1cgt58whzNMEJaZn41XbVwsIAnSfkpVLtnV7FFJLIPQ/M4euh5cMT1HD+rhsfYlABOGNYDf3TVGRjwrmp34DqBMIxB7LLXYxi6osVVPkN7AzoyhHw5c0kbuzwHneAIZ/i2Sz+IOIJkZObhvLhfQM5CakuVs0AnJH00gw0yhMSkX11XQqS8hUKbU+Gjv+Jx1GOcbIqpVypNA+u01VkDyI6yWbTJ7qeIbGILABBet6wc8dHvPmVT9otL6aJc2l6PlbKJ92B3rvMpBRmDISRv96NdsDVbDBK5YjMNg9rugku2YpGEqLO7pR9PJkxw+deKZGo09VPHJLYa0C0YG5fwBnqtH/iEzIi80/jf85vYbF5Bxff+T2XuX13B8AOvuranMFDQ98r3Sp6rPNzCCQtABtzMUQWXWhAuBlZn+ni1kgZjqQ1FJWeOfwQuMxYSN8f2merOMfnRXZrEoJ4sytI0RHSkfOcxpUKYm10neVUpazfaYIFtINbINKlxcnogByXgQEDA1Mytu+jpbnMZq2QhJZAyRAtUE3ARB3OrbDAwl9+fAikqduieQf3McWvOo7DkWCMGRCJYx+x8P4JJiUBCu+iMaNggbZwqDn5q4wtNG0W8KWRyHaGzZu1Zt//1Ump1ryoJcXxBxHI9CzeVlm98= </div><script src="/lib/crypto-js.js"></script><script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css"><div><hr><strong>为您推荐</strong><ul><li><a href="https://blogs.kainy.cn/2010/11/厦门打酱一日游/">厦门打酱一日游</a></li></ul></div>]]></content>
+    
+    <summary type="html">
+    
+      该内容已加密，密码验证通过后才可访问。&lt;/br&gt;如有必要可&lt;a href=&quot;mailto:gt@kainy.cn?subject=%E5%92%A8%E8%AF%A2%E5%8D%9A%E6%96%87%E8%AE%BF%E9%97%AE%E5%AF%86%E7%A0%81%EF%BC%88%E8%87%AA%E6%88%91%E7%AE%80%E4%BB%8B%EF%BC%9A%20%EF%BC%9B%E7%BD%91%E9%A1%B5%E9%93%BE%E6%8E%A5%EF%BC%9A%20%EF%BC%9B%E8%AE%BF%E9%97%AE%E4%BA%8B%E7%94%B1%EF%BC%9A%20%EF%BC%9B%EF%BC%89&quot;&gt;尝试发送邮件&lt;/a&gt;咨询。&lt;/br&gt;
+    
+    </summary>
+    
+      <category term="东写西读" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/"/>
+    
+      <category term="心路历程" scheme="https://blogs.kainy.cn/categories/%E4%B8%9C%E5%86%99%E8%A5%BF%E8%AF%BB/%E5%BF%83%E8%B7%AF%E5%8E%86%E7%A8%8B/"/>
+    
+    
+      <category term="厦门" scheme="https://blogs.kainy.cn/tags/%E5%8E%A6%E9%97%A8/"/>
+    
+      <category term="故乡" scheme="https://blogs.kainy.cn/tags/%E6%95%85%E4%B9%A1/"/>
+    
+  </entry>
+  
+</feed>
