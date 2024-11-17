@@ -1,0 +1,14 @@
+{
+  "applinks": {
+      "apps": [],
+      "details": [
+          {
+              "appID": "G55458S7HY.com.gqmg.ksk",
+              "paths": ["/*"]
+          }
+      ]
+  },
+  "webcredentials": {
+      "apps": [ "G55458S7HY.com.gqmg.ksk" ]
+   }
+}
